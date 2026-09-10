@@ -258,6 +258,9 @@
   html.a11y-contrast a,html.a11y-contrast .btn-outline{color:#fff !important;border-color:#fff !important;}
   html.a11y-underline a{text-decoration:underline !important;}
   html.a11y-readable, html.a11y-readable *{font-family:Arial, sans-serif !important;letter-spacing:.2px;}
+  html.a11y-no-motion *, html.a11y-no-motion *::before, html.a11y-no-motion *::after{
+    animation:none !important;transition:none !important;scroll-behavior:auto !important;
+  }
 
   /* Project modal */
   .modal-backdrop{
@@ -351,7 +354,7 @@
     <div class="wrap hero-inner">
       <div>
         <span class="eyebrow-tag">מעצבת גרפית · מנהלת סושיאל</span>
-        <h1>מנהלת לעסק שלך את<br><span class="accent">הסושיאל</span>, כדי שתוכלו לנהל את העסק</h1>
+        <h1>מנהלת לעסק שלך את<br><span class="accent">הסושיאל</span>, כדי שתוכל לנהל את העסק</h1>
         <p>מלווה עסקים ומותגים בתהליכי מיתוג, בניית קמפיינים וניהול נוכחות דיגיטלית - בשילוב של חשיבה אסטרטגית וקרייאטיב, כי עיצוב ותוכן צריכים לעבוד יחד כדי לייצר השפעה אמיתית.</p>
         <div class="hero-actions">
           <a href="#contact" class="btn btn-primary">לקביעת שיחת היכרות</a>
@@ -432,7 +435,7 @@
         <div class="section-head" style="margin-top:64px;">
           <p class="kicker">עבודות נבחרות</p>
           <h2>פרויקטים אחרונים</h2>
-          <p class="desc">לחצו על כל פרויקט כדי לראות פירוט ודוגמאות סרטונים שהכנתי עבור העסק.</p>
+          <p class="desc"><strong>לחצו על כל פרויקט כדי לראות פירוט ודוגמאות סרטונים שהכנתי עבור העסק ⬇</strong></p>
         </div>
         <div class="portfolio-grid">
           <div class="portfolio-item" tabindex="0" role="button" data-project="smadar-nichochot">
@@ -485,7 +488,7 @@
           <div class="service-card">
             <div class="service-icon">1</div>
             <h3>סרטוני ביקורת מוצר</h3>
-            <p>אנפוקסינג וביקורת כנה שמדברת בגובה העיניים - מצוין לעמוד מוצר ולפרסום ממומן.</p>
+            <p>אנבוקסינג וביקורת כנה שמדברת בגובה העיניים - מצוין לעמוד מוצר ולפרסום ממומן.</p>
           </div>
           <div class="service-card">
             <div class="service-icon">2</div>
@@ -517,6 +520,10 @@
             <div class="fill" style="background-image:url('images/tau-cover.jpg')"></div>
             <div class="overlay"><h4>אוניברסיטת תל אביב</h4><span>UGC</span></div>
           </div>
+          <div class="portfolio-item" tabindex="0" role="button" data-project="namiz">
+            <div class="fill" style="background-image:url('images/namiz-cover.jpg')"></div>
+            <div class="overlay"><h4>נמיז</h4><span>UGC</span></div>
+          </div>
           <div class="portfolio-item" tabindex="0" role="button" data-project="hachshara-go">
             <div class="fill" style="background-image:url('images/hachshara-go-cover.jpg')"></div>
             <div class="overlay"><h4>הכשרה GO</h4><span>UGC</span></div>
@@ -528,10 +535,6 @@
           <div class="portfolio-item" tabindex="0" role="button" data-project="dinaroz">
             <div class="fill" style="background-image:url('images/dinaroz-cover.jpg')"></div>
             <div class="overlay"><h4>דינרוז</h4><span>UGC</span></div>
-          </div>
-          <div class="portfolio-item" tabindex="0" role="button" data-project="namiz">
-            <div class="fill" style="background-image:url('images/namiz-cover.jpg')"></div>
-            <div class="overlay"><h4>נמיז</h4><span>UGC</span></div>
           </div>
         </div>
       </div>
@@ -641,6 +644,7 @@
   <button class="a11y-toggle-btn" onclick="a11yToggleClass('a11y-contrast', this)">ניגודיות גבוהה</button>
   <button class="a11y-toggle-btn" onclick="a11yToggleClass('a11y-underline', this)">הדגשת קישורים</button>
   <button class="a11y-toggle-btn" onclick="a11yToggleClass('a11y-readable', this)">גופן קריא</button>
+  <button class="a11y-toggle-btn" onclick="a11yStopMotion(this)">עצירת אנימציות ווידאו</button>
   <button class="a11y-reset" onclick="a11yReset()">איפוס הגדרות נגישות</button>
 </div>
 
@@ -677,10 +681,15 @@
     document.documentElement.classList.toggle(cls);
     if(btn) btn.classList.toggle('active');
   }
+  function a11yStopMotion(btn){
+    document.documentElement.classList.toggle('a11y-no-motion');
+    if(btn) btn.classList.toggle('active');
+    document.querySelectorAll('video').forEach(function(v){ v.pause(); });
+  }
   function a11yReset(){
     a11yFontStep = 0;
     document.documentElement.style.zoom = '';
-    ['a11y-contrast','a11y-underline','a11y-readable'].forEach(function(c){
+    ['a11y-contrast','a11y-underline','a11y-readable','a11y-no-motion'].forEach(function(c){
       document.documentElement.classList.remove(c);
     });
     document.querySelectorAll('.a11y-toggle-btn').forEach(function(b){ b.classList.remove('active'); });
@@ -799,10 +808,7 @@
       ]
     },
     'sadnat-hayotzrim': {
-      tag: "צילום והפקת תוכן",
-      title: "סדנת היוצרים - סדנת נגרות",
-      desc: "יום צילומים לסדנת הנגרות, כולל עיצוב עלון הסדנאות והלוגו של העסק.",
-      instagram: "",
+      instagram: "https://www.instagram.com/sadnat_hayotzrim/",
       media: [
         { type: "image", label: "עלון הסדנאות", src: "images/sadnat-hayotzrim-menu.jpg" },
         { type: "video", label: "מאיפה הוא", src: "videos/sadnat-1.mp4" },
@@ -881,7 +887,7 @@
       tag: "UGC",
       title: "אוניברסיטת תל אביב",
       desc: "סרטון UGC עבור אוניברסיטת תל אביב.",
-      instagram: "",
+      instagram: "https://www.instagram.com/p/DUNtpPaDpqI/",
       media: [
         { type: "video", label: "הסרטון", src: "videos/tau.mp4", views: "34.6 אלף צפיות" }
       ]
@@ -890,7 +896,7 @@
       tag: "UGC",
       title: "נמיז",
       desc: "סרטון UGC עבור נמיז.",
-      instagram: "",
+      instagram: "https://www.instagram.com/p/DUqpK-1Al-e/",
       media: [
         { type: "video", label: "הסרטון", src: "videos/namiz.mp4" }
       ]
