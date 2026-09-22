@@ -108,9 +108,8 @@
   .services-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:24px;}
   .service-card{
     background:var(--white);border-radius:var(--radius);padding:36px 28px;
-    border:2px solid transparent;transition:border-color .2s, transform .2s;
+    border:2px solid transparent;
   }
-  .service-card:hover{border-color:var(--ink);transform:translateY(-4px);}
   .service-icon{
     width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;
     font-size:22px;margin-bottom:20px;font-weight:900;font-family:'Rubik';color:var(--white);
@@ -129,13 +128,13 @@
   }
   .portfolio-item .fill{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background-size:cover;background-position:center;}
   .portfolio-item .overlay{
-    position:absolute;inset:0;background:rgba(27,27,47,.82);color:var(--white);
-    display:flex;flex-direction:column;justify-content:flex-end;padding:20px;
-    opacity:0;transition:opacity .25s ease;
+    position:absolute;inset:0;
+    background:linear-gradient(to top, rgba(27,27,47,.92) 0%, rgba(27,27,47,.55) 45%, rgba(27,27,47,0) 75%);
+    color:var(--white);
+    display:flex;flex-direction:column;justify-content:flex-end;padding:16px;
   }
-  .portfolio-item:hover .overlay{opacity:1;}
-  .portfolio-item .overlay h4{font-family:'Rubik';font-weight:700;font-size:16px;margin-bottom:4px;}
-  .portfolio-item .overlay span{font-size:13px;color:var(--yellow);}
+  .portfolio-item .overlay h4{font-family:'Rubik';font-weight:700;font-size:15px;margin-bottom:3px;line-height:1.2;}
+  .portfolio-item .overlay span{font-size:12px;color:var(--yellow);}
 
   /* Testimonials */
   .testi-track{display:flex;gap:24px;overflow-x:auto;padding-bottom:12px;scroll-snap-type:x mandatory;}
@@ -326,8 +325,16 @@
       box-shadow:0 12px 20px rgba(0,0,0,.08);
     }
     .nav-links.mobile-open a{font-size:17px;}
+    .hero{padding:110px 0 50px;}
+    #about{padding-top:50px;}
     .hero-inner{grid-template-columns:1fr;}
     .hero h1{font-size:38px;}
+    section{padding:60px 0;}
+    .services-grid{gap:14px;}
+    .service-card{padding:20px 18px;}
+    .service-icon{width:40px;height:40px;font-size:18px;margin-bottom:12px;}
+    .service-card h3{font-size:17px;margin-bottom:6px;}
+    .service-card p{font-size:14px;}
     .services-grid,.portfolio-grid{grid-template-columns:1fr 1fr;}
     .contact-wrap{grid-template-columns:1fr;}
     .contact{padding:40px 24px;margin:0 12px;}
@@ -360,7 +367,7 @@
     <div class="wrap hero-inner">
       <div>
         <span class="eyebrow-tag">מעצבת גרפית · מנהלת סושיאל</span>
-        <h1>מנהלת לעסק שלך את<br><span class="accent">הסושיאל</span>, כדי שתוכל לנהל את העסק</h1>
+        <h1>מנהלת לעסק שלך את <span class="accent">הסושיאל</span>, כדי שתוכל לנהל את העסק</h1>
         <p>מלווה עסקים ומותגים בתהליכי מיתוג, בניית קמפיינים וניהול נוכחות דיגיטלית - בשילוב של חשיבה אסטרטגית וקרייאטיב, כי עיצוב ותוכן צריכים לעבוד יחד כדי לייצר השפעה אמיתית.</p>
         <div class="hero-actions">
           <a href="#contact" class="btn btn-primary">לקביעת שיחת היכרות</a>
