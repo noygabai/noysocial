@@ -125,16 +125,41 @@
   .portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
   .portfolio-item{
     aspect-ratio:1/1;border-radius:16px;position:relative;overflow:hidden;cursor:pointer;
+    transition:transform .3s ease, box-shadow .3s ease;
   }
-  .portfolio-item .fill{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background-size:cover;background-position:center;}
+  .portfolio-item:hover{transform:translateY(-4px);box-shadow:0 12px 24px rgba(27,27,47,.18);}
+  @media (prefers-reduced-motion:reduce){
+    .portfolio-item:hover{transform:none;box-shadow:none;}
+  }
+  .portfolio-item .fill{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    background-size:cover;background-position:center;
+    transition:transform .4s ease;
+  }
+  .portfolio-item:hover .fill{transform:scale(1.08);}
+  @media (prefers-reduced-motion:reduce){
+    .portfolio-item:hover .fill{transform:none;}
+  }
   .portfolio-item .overlay{
     position:absolute;inset:0;
     background:linear-gradient(to top, rgba(27,27,47,.92) 0%, rgba(27,27,47,.55) 45%, rgba(27,27,47,0) 75%);
     color:var(--white);
     display:flex;flex-direction:column;justify-content:flex-end;padding:16px;
   }
-  .portfolio-item .overlay h4{font-family:'Rubik';font-weight:700;font-size:15px;margin-bottom:3px;line-height:1.2;}
-  .portfolio-item .overlay span{font-size:12px;color:var(--yellow);}
+  .portfolio-item .overlay h4{
+    font-family:'Rubik';font-weight:700;font-size:15px;margin-bottom:3px;line-height:1.2;
+    opacity:0;transform:translateY(12px);transition:opacity .5s ease, transform .5s ease;
+  }
+  .portfolio-item .overlay span{
+    font-size:12px;color:var(--yellow);
+    opacity:0;transform:translateY(12px);transition:opacity .5s ease .08s, transform .5s ease .08s;
+  }
+  .portfolio-item.in-view .overlay h4,
+  .portfolio-item.in-view .overlay span{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion:reduce){
+    .portfolio-item .overlay h4,
+    .portfolio-item .overlay span{opacity:1;transform:none;transition:none;}
+  }
 
   /* Testimonials */
   .testi-track{display:flex;gap:24px;overflow-x:auto;padding-bottom:12px;scroll-snap-type:x mandatory;}
@@ -169,6 +194,18 @@
   .contact-link:nth-child(2) .icon{background:var(--teal);}
   .contact-link:nth-child(3) .icon{background:var(--yellow);color:var(--ink);}
   .contact-link .value{font-family:'Rubik';font-weight:700;font-size:17px;}
+  .whatsapp-trigger{cursor:pointer;}
+
+  .whatsapp-choice{
+    display:none;background:rgba(255,255,255,.08);border-radius:16px;padding:16px 18px;
+    flex-direction:column;gap:10px;margin-top:-4px;
+  }
+  .whatsapp-choice.open{display:flex;}
+  .whatsapp-choice p{font-size:13px;color:#B9B7C6;margin-bottom:2px;}
+  .whatsapp-choice a{
+    background:#25D366;color:#fff;text-align:center;padding:12px;border-radius:100px;
+    font-family:'Rubik';font-weight:700;font-size:14px;
+  }
 
   /* About */
   #about{padding-top:90px;padding-bottom:40px;}
@@ -235,6 +272,24 @@
     z-index:150;box-shadow:0 6px 20px rgba(0,0,0,.2);
   }
   #a11y-toggle:focus-visible{outline:3px solid var(--coral);outline-offset:3px;}
+
+  #wa-float{
+    position:fixed;bottom:24px;left:86px;width:52px;height:52px;border-radius:50%;
+    background:#25D366;color:#fff;border:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    z-index:150;box-shadow:0 6px 20px rgba(0,0,0,.2);
+  }
+  #wa-float:focus-visible{outline:3px solid var(--coral);outline-offset:3px;}
+  #wa-float-panel{
+    display:none;position:fixed;bottom:86px;left:86px;background:var(--white);
+    border-radius:16px;padding:16px;width:220px;box-shadow:0 10px 30px rgba(0,0,0,.18);z-index:150;
+  }
+  #wa-float-panel.open{display:flex;flex-direction:column;gap:8px;}
+  #wa-float-panel p{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px;}
+  #wa-float-panel a{
+    background:#25D366;color:#fff;text-align:center;padding:11px;border-radius:100px;
+    font-family:'Rubik';font-weight:700;font-size:13px;
+  }
   #a11y-panel{
     display:none;position:fixed;bottom:86px;left:24px;background:var(--white);
     border-radius:18px;padding:20px;width:240px;box-shadow:0 10px 30px rgba(0,0,0,.18);z-index:150;
@@ -632,6 +687,20 @@
             </span>
             <span class="value">‎@noygabai</span>
           </a>
+          <div class="contact-link whatsapp-trigger" onclick="toggleWhatsappChoice()" role="button" tabindex="0" onkeydown="if(event.key==='Enter') toggleWhatsappChoice()">
+            <span class="icon" style="background:#25D366;">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.1c-.24.68-1.39 1.32-1.92 1.4-.49.08-1.11.11-1.79-.11-.41-.13-.94-.31-1.62-.6-2.85-1.23-4.71-4.1-4.85-4.29-.14-.19-1.16-1.54-1.16-2.94 0-1.4.73-2.08.99-2.37.26-.28.57-.35.76-.35h.55c.18 0 .42-.07.65.5.24.58.82 2 .89 2.15.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.28.29-.12.57.16.28.71 1.17 1.52 1.9 1.05.94 1.93 1.23 2.21 1.37.28.14.44.12.61-.07.17-.19.71-.83.9-1.11.19-.28.38-.24.63-.14.26.09 1.65.78 1.93.92.28.14.47.21.54.33.07.12.07.68-.17 1.36z"/>
+              </svg>
+            </span>
+            <span class="value">שליחת הודעה בוואטסאפ</span>
+          </div>
+
+          <div id="whatsapp-choice" class="whatsapp-choice">
+            <p>על מה תרצו לדבר?</p>
+            <a href="https://wa.me/972527317927?text=%D7%94%D7%99%D7%99%20%D7%A0%D7%95%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A2%D7%9C%20%D7%A0%D7%99%D7%94%D7%95%D7%9C%20%D7%A1%D7%95%D7%A9%D7%99%D7%90%D7%9C%20%F0%9F%98%8A" target="_blank" rel="noopener">ניהול סושיאל</a>
+            <a href="https://wa.me/972527317927?text=%D7%94%D7%99%D7%99%20%D7%A0%D7%95%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A2%D7%9C%20%D7%99%D7%A6%D7%99%D7%A8%D7%AA%20%D7%AA%D7%95%D7%9B%D7%9F%20UGC%20%F0%9F%98%8A" target="_blank" rel="noopener">UGC</a>
+          </div>
         </div>
       </div>
     </div>
@@ -649,6 +718,18 @@
 
 <!-- כפתור ותפריט נגישות -->
 <button id="a11y-toggle" onclick="toggleA11yPanel()" aria-label="פתיחת תפריט נגישות" title="נגישות">♿</button>
+
+<button id="wa-float" onclick="toggleWaFloat()" aria-label="שליחת הודעה בוואטסאפ" title="וואטסאפ">
+  <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+    <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.1c-.24.68-1.39 1.32-1.92 1.4-.49.08-1.11.11-1.79-.11-.41-.13-.94-.31-1.62-.6-2.85-1.23-4.71-4.1-4.85-4.29-.14-.19-1.16-1.54-1.16-2.94 0-1.4.73-2.08.99-2.37.26-.28.57-.35.76-.35h.55c.18 0 .42-.07.65.5.24.58.82 2 .89 2.15.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.28.29-.12.57.16.28.71 1.17 1.52 1.9 1.05.94 1.93 1.23 2.21 1.37.28.14.44.12.61-.07.17-.19.71-.83.9-1.11.19-.28.38-.24.63-.14.26.09 1.65.78 1.93.92.28.14.47.21.54.33.07.12.07.68-.17 1.36z"/>
+  </svg>
+</button>
+<div id="wa-float-panel" role="dialog" aria-label="בחירת נושא לוואטסאפ">
+  <p>על מה תרצו לדבר?</p>
+  <a href="https://wa.me/972527317927?text=%D7%94%D7%99%D7%99%20%D7%A0%D7%95%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A2%D7%9C%20%D7%A0%D7%99%D7%94%D7%95%D7%9C%20%D7%A1%D7%95%D7%A9%D7%99%D7%90%D7%9C%20%F0%9F%98%8A" target="_blank" rel="noopener">ניהול סושיאל</a>
+  <a href="https://wa.me/972527317927?text=%D7%94%D7%99%D7%99%20%D7%A0%D7%95%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A2%D7%9C%20%D7%99%D7%A6%D7%99%D7%A8%D7%AA%20%D7%AA%D7%95%D7%9B%D7%9F%20UGC%20%F0%9F%98%8A" target="_blank" rel="noopener">UGC</a>
+</div>
+
 <div id="a11y-panel" role="dialog" aria-label="תפריט נגישות">
   <div class="a11y-row"><span>גודל טקסט</span>
     <div class="a11y-btns">
@@ -676,6 +757,36 @@
 <script>
 
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  function toggleWhatsappChoice(){
+    document.getElementById('whatsapp-choice').classList.toggle('open');
+  }
+
+  function toggleWaFloat(){
+    document.getElementById('wa-float-panel').classList.toggle('open');
+  }
+
+  function revealPortfolioItems(scope){
+    (scope || document).querySelectorAll('.portfolio-item:not(.in-view)').forEach(function(item){
+      item.classList.add('in-view');
+    });
+  }
+
+  if ('IntersectionObserver' in window) {
+    const portfolioObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          portfolioObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.portfolio-item').forEach(function(item){
+      portfolioObserver.observe(item);
+    });
+  } else {
+    revealPortfolioItems();
+  }
 
   function toggleMobileMenu(){
     document.getElementById('nav-links').classList.toggle('mobile-open');
@@ -718,11 +829,11 @@
   const INFO_PAGES = {
     accessibility: {
       title: "הצהרת נגישות",
-      body: "אני, נוי גבאי, רואה חשיבות רבה במתן שירות שוויוני ונגיש לכלל הגולשים, לרבות אנשים עם מוגבלויות, ומשקיעה מאמצים רבים בהנגשת האתר.\n\nהאתר משמש כתיק עבודות דיגיטלי ואינו כולל קבלת קהל פיזית, ולכן אין הסדרי נגישות למבנים או משרדים. עם זאת, בוצעו התאמות נגישות דיגיטליות בהתאם לתקן הישראלי (ת\"י 5568) ברמת נגישות AA, המבוסס על הנחיות WCAG 2.0.\n\nהתאמות הנגישות שבוצעו באתר:\n\n• ניווט באתר: ניתן לנווט ברחבי האתר באמצעות מקלדת בלבד (שימוש במקשי Tab, Enter וחיצים).\n\n• תאימות לדפדפנים וקוראי מסך: האתר נבדק ומותאם לגלישה בדפדפנים הנפוצים ולשימוש בתוכנות קוראות מסך המקובלות.\n\n• טקסט חלופי (Alt Text): למרבית התמונות והאלמנטים הגרפיים המשמעותיים בתיק העבודות נוסף טקסט חלופי מתאר.\n\n• מבנה ותצוגה: התוכן באתר מסודר באופן ברור, תוך שמירה על ניגודיות צבעים תקינה בין הטקסט לרקע, והימנעות מאלמנטים מהבהבים.\n\nסייגים לנגישות: חשוב לציין כי למרות המאמצים להנגיש את כלל הדפים באתר, ייתכן שיתגלו חלקים ספציפיים שטרם הונגשו במלואם, במיוחד כאשר מדובר בתצוגה של פרויקטים עיצוביים מורכבים או סרטונים חיצוניים. המאמצים לשפר את נגישות האתר נמשכים באופן תדיר.\n\nיצירת קשר בנושא נגישות: אם נתקלתם בבעיית נגישות כלשהי במהלך הגלישה באתר, אשמח לקבל עדכון על כך כדי שאוכל לטפל בנושא בהקדם.\n\nלפניות ניתן ליצור קשר:\n\n• שם: נוי גבאי\n• דוא\"ל: nogabai5@gmail.com\n• טלפון: 052-7317927\n\nתאריך עדכון אחרון: " + new Date().toLocaleDateString('he-IL')
+      body: "אני, נוי גבאי, רואה חשיבות רבה במתן שירות שוויוני ונגיש לכלל הגולשים, לרבות אנשים עם מוגבלויות, ומשקיעה מאמצים רבים בהנגשת האתר.\n\nהאתר משמש כתיק עבודות דיגיטלי ואינו כולל קבלת קהל פיזית, ולכן אין הסדרי נגישות למבנים או משרדים. ההתאמות שבוצעו הן דיגיטליות, בהתאם לתקן הישראלי ת\"י 5568 ולתקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), התשע\"ג-2013, המבוססות על הנחיות WCAG 2.0 ברמה AA.\n\nהתאמות הנגישות שבוצעו באתר:\n\n• ניווט מקלדת: ניתן לנווט בכל רחבי האתר באמצעות מקלדת בלבד (Tab, Enter וחיצים), כולל בין כרטיסי הפרויקטים והחלונות הנפתחים.\n\n• תפריט נגישות מובנה: כפתור נגישות קבוע (סימן ה-♿) מאפשר הגדלת/הקטנת טקסט, מצב ניגודיות גבוהה, הדגשת קישורים, גופן קריא, ועצירת אנימציות וסרטונים - לפי צורך.\n\n• תאימות לקוראי מסך ולדפדפנים: האתר נבדק ומותאם לשימוש בתוכנות קוראות מסך נפוצות ולגלישה בדפדפנים המקובלים.\n\n• טקסט חלופי (Alt Text): לתמונות ולאלמנטים גרפיים משמעותיים בתיק העבודות נוסף טקסט חלופי מתאר.\n\n• מבנה, ניגודיות והיעדר הבהובים: התוכן מסודר בצורה ברורה, עם ניגודיות תקינה בין טקסט לרקע, ובלי אלמנטים מהבהבים.\n\nסייגים לנגישות: ייתכנו חלקים שטרם הונגשו במלואם, בעיקר בתצוגת פרויקטים עיצוביים מורכבים, סרטונים מוטבעים או תכנים חיצוניים (כגון פוסטים מאינסטגרם). המאמצים לשיפור הנגישות נמשכים באופן שוטף.\n\nרכז/ת נגישות ויצירת קשר: אם נתקלתם בבעיית נגישות, נא לפנות ונטפל בכך בהקדם האפשרי:\n\n• שם: נוי גבאי (רכזת הנגישות של האתר)\n• דוא\"ל: nogabai5@gmail.com\n• טלפון: 052-7317927\n\nתאריך עדכון ובדיקה אחרונים: " + new Date().toLocaleDateString('he-IL')
     },
     privacy: {
       title: "הצהרת פרטיות",
-      body: "אתר זה משמש כתיק עבודות המציג פרויקטים בתחום ניהול סושיאל ועיצוב גרפי. פרטיות המבקרים באתר חשובה לי מאוד, ולכן מובהרות הנקודות הבאות:\n\n• איסוף מידע אישי: האתר אינו אוסף, אינו שומר ואינו מעבד שום מידע אישי על המבקרים בו. לא מתבצעת אגירת נתונים, אין צורך בהרשמה לאתר, ואין מערכות של קליטת נתונים (כמו טופסי השארת פרטים או ניוזלטרים).\n\n• קבצי עוגיות (Cookies): ייתכן והפלטפורמה שעליה בנוי האתר משתמשת בקבצי עוגיות טכניים ובסיסיים לצורך תפעולו התקין של האתר בלבד. קבצים אלו אינם משמשים למעקב אחר משתמשים או לאיסוף נתונים מזהים.\n\n• יצירת קשר: במידה ותבחרו ליצור קשר דרך קישורים ישירים המופיעים באתר (כגון לחיצה על קישור לווטסאפ, דוא\"ל או פרופילים ברשתות החברתיות), המידע שתמסרו יישמר באפליקציות אלו בלבד ולא על גבי שרתי האתר.\n\n• שינויים במדיניות: במידה ובעתיד יתווספו לאתר כלים לאיסוף נתונים כלשהם, הצהרה זו תעודכן בהתאם לשקיפות מלאה."
+      body: "אתר זה משמש כתיק עבודות דיגיטלי המציג פרויקטים בתחום ניהול סושיאל, UGC ועיצוב גרפי. פרטיות המבקרים באתר חשובה לי, ולכן מובהרות הנקודות הבאות בהתאם לחוק הגנת הפרטיות, התשמ\"א-1981, לרבות תיקון מס' 13 שנכנס לתוקף באוגוסט 2025:\n\n• איסוף מידע אישי: האתר אינו אוסף, אינו שומר ואינו מעבד מידע אישי על המבקרים בו באופן פעיל. אין באתר טפסי הרשמה, ניוזלטר או מערכת לקליטת נתונים, ולכן אינו מהווה \"מאגר מידע\" כמשמעותו בחוק, ואינה חלה עליו חובת רישום מאגר או מינוי ממונה הגנת פרטיות.\n\n• קבצי עוגיות (Cookies): נכון לכתיבת שורות אלו, האתר אינו משתמש בכלי אנליטיקס או מעקב פרסומי. ייתכן שהפלטפורמה שעליה בנוי האתר משתמשת בעוגיות טכניות בסיסיות הנדרשות לתפעולו התקין בלבד, ואלו אינן משמשות לאיסוף מידע מזהה.\n\n• יצירת קשר ורשתות חברתיות: בבחירתכם ליצור קשר דרך קישורים ישירים באתר (מייל, טלפון, וואטסאפ או אינסטגרם), המידע שתמסרו (כגון שם, פרטי התקשרות ותוכן הפנייה) מנוהל במסגרת האפליקציה או הפלטפורמה שבה נוצר הקשר (לדוגמה מטא/וואטסאפ, אינסטגרם, ספק הדוא\"ל שלכם) ובכפוף למדיניות הפרטיות שלה, ולא על גבי שרתי אתר זה. המידע ישמש רק לצורך מענה לפנייתכם.\n\n• שיתוף עם צדדים שלישיים: איננו מוכרים, משכירים או משתפים מידע אישי עם גורמי צד ג' למטרות שיווקיות.\n\n• זכויותיכם: בהתאם לחוק, כל אדם זכאי לברר אילו פרטים נשמרו עליו (במידה ונשמרו כלשהם, כגון תוכן פנייה שנשלח בעבר) ולבקש את תיקונם או מחיקתם, בפנייה לפרטי הקשר שלהלן.\n\n• פנייה בנושאי פרטיות: nogabai5@gmail.com\n\n• שינויים במדיניות: אם בעתיד יתווספו לאתר כלים לאיסוף נתונים (כגון אנליטיקס, טופס יצירת קשר או ניוזלטר), הצהרה זו תעודכן בהתאם לפני הפעלתם, לשם שקיפות מלאה.\n\nעדכון אחרון: " + new Date().toLocaleDateString('he-IL')
     }
   };
 
@@ -742,7 +853,9 @@
 
   function switchTab(tab){
     document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
-    document.getElementById('tab-' + tab).classList.add('active');
+    const panel = document.getElementById('tab-' + tab);
+    panel.classList.add('active');
+    revealPortfolioItems(panel);
     document.querySelectorAll('.tab-btn').forEach(function(b){
       b.classList.toggle('active', b.dataset.tab === tab);
     });
