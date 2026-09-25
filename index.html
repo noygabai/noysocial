@@ -162,10 +162,17 @@
   }
 
   /* Testimonials */
-  .testi-track{display:flex;gap:24px;overflow-x:auto;padding-bottom:12px;scroll-snap-type:x mandatory;}
+  .testi-viewport{
+    overflow-x:auto;overflow-y:hidden;width:100%;cursor:grab;
+    -webkit-mask-image:linear-gradient(to left, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
+    mask-image:linear-gradient(to left, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
+    scrollbar-width:none;-ms-overflow-style:none;
+  }
+  .testi-viewport::-webkit-scrollbar{display:none;}
+  .testi-viewport.dragging{cursor:grabbing;}
+  .testi-track{display:flex;gap:24px;width:max-content;}
   .testi-card{
     flex:0 0 320px;background:var(--white);border-radius:var(--radius);padding:28px;
-    scroll-snap-align:start;
   }
   .testi-card p{font-size:16px;margin-bottom:20px;}
   .testi-name{display:flex;align-items:center;gap:12px;}
@@ -635,7 +642,8 @@
         <p class="kicker">מה אומרים עליי</p>
         <h2>לקוחות מספרים</h2>
       </div>
-      <div class="testi-track">
+      <div class="testi-viewport">
+      <div class="testi-track" id="testi-track">
         <div class="testi-card">
           <p>"קיבלתי המלצה חמה על נוי. מהרגע הראשון נוי הגיעה עם חיוך ושידרה מוטיבציה והתלהבות. קצב העבודה מאוד גבוה, התקשורת קלילה וחלקה, תמיד עם חיוך ותמיד קשובה לרצונות. עם זאת, ידעה לתת ביקורת בונה ותיקונים כשצריך. החומרים יוצאים ברמה גבוהה וקלעו בדיוק למה שביקשתי. ניהול הסושיאל לעילא ולעילא. ממליץ בחום לכל מי שמחפש ניהול סושיאל ועיצוב, מקצועי וגם חוויית שירות איכותית, אשר לא מוצאים בקלות בארצנו."</p>
           <div class="testi-name"><div class="testi-avatar" style="background-image:url('images/adam-basport-cover.png');background-size:cover;background-position:center;"></div><div><b>שימי עשור</b><span>מנהל סטודיו, אדם בספורט</span></div></div>
@@ -656,6 +664,7 @@
           <p>"את תותחית. מסבירה ממש מעולה, וגם סבלנית לשיגועים שלי ושל רואי. שבת שלום ותודה על היום."</p>
           <div class="testi-name"><div class="testi-avatar" style="background-image:url('images/pension-bahar.png');background-size:cover;background-position:center;"></div><div><b>אביב קשי</b><span>בעלים, פנסיון בהר</span></div></div>
         </div>
+      </div>
       </div>
     </div>
   </section>
@@ -757,6 +766,75 @@
 <script>
 
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  (function setupTestiMarquee(){
+    const viewport = document.querySelector('.testi-viewport');
+    const track = document.getElementById('testi-track');
+    if (!viewport || !track) return;
+
+    const originalCards = Array.from(track.children);
+    originalCards.forEach(function(card){
+      const clone = card.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      track.appendChild(clone);
+    });
+
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Detect this browser's RTL scrollLeft convention (varies by engine).
+    viewport.scrollLeft = 1;
+    const rtlIsNegative = viewport.scrollLeft <= 0;
+    viewport.scrollLeft = 0;
+
+    let paused = false;
+    let resumeTimer;
+    function pauseAuto(){ paused = true; clearTimeout(resumeTimer); }
+    function scheduleResume(){ clearTimeout(resumeTimer); resumeTimer = setTimeout(function(){ paused = false; }, 2200); }
+
+    // Manual drag-to-scroll with mouse
+    let isDragging = false, dragStartX = 0, dragStartScroll = 0;
+    viewport.addEventListener('mousedown', function(e){
+      isDragging = true;
+      viewport.classList.add('dragging');
+      dragStartX = e.pageX;
+      dragStartScroll = viewport.scrollLeft;
+      pauseAuto();
+    });
+    window.addEventListener('mousemove', function(e){
+      if (!isDragging) return;
+      viewport.scrollLeft = dragStartScroll - (e.pageX - dragStartX);
+    });
+    window.addEventListener('mouseup', function(){
+      if (!isDragging) return;
+      isDragging = false;
+      viewport.classList.remove('dragging');
+      scheduleResume();
+    });
+
+    // Manual touch scroll / wheel / native scrollbar interaction
+    viewport.addEventListener('touchstart', pauseAuto, { passive: true });
+    viewport.addEventListener('touchend', scheduleResume);
+    viewport.addEventListener('wheel', function(){ pauseAuto(); scheduleResume(); }, { passive: true });
+    // (no pause on hover - only actual interaction pauses it, per user preference)
+
+    if (reduceMotion) return; // manual scrolling still works; no auto-play
+
+    const speed = 0.55; // px per frame
+    function step(){
+      if (!paused) {
+        const half = track.scrollWidth / 2;
+        if (rtlIsNegative) {
+          viewport.scrollLeft -= speed;
+          if (Math.abs(viewport.scrollLeft) >= half) viewport.scrollLeft += half;
+        } else {
+          viewport.scrollLeft += speed;
+          if (viewport.scrollLeft >= half) viewport.scrollLeft -= half;
+        }
+      }
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  })();
 
   function toggleWhatsappChoice(){
     document.getElementById('whatsapp-choice').classList.toggle('open');
