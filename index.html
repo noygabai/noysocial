@@ -232,15 +232,13 @@
   }
 
   /* Testimonials */
+  .testi-outer{position:relative;}
   .testi-viewport{
-    overflow-x:auto;overflow-y:hidden;width:100%;cursor:grab;
+    overflow:hidden;width:100%;
     -webkit-mask-image:linear-gradient(to left, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
     mask-image:linear-gradient(to left, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
-    scrollbar-width:none;-ms-overflow-style:none;
   }
-  .testi-viewport::-webkit-scrollbar{display:none;}
-  .testi-viewport.dragging{cursor:grabbing;}
-  .testi-track{display:flex;gap:24px;width:max-content;}
+  .testi-track{display:flex;gap:24px;width:max-content;will-change:transform;}
   .testi-card{
     flex:0 0 320px;background:var(--white);border-radius:var(--radius);padding:28px;
   }
@@ -249,6 +247,22 @@
   .testi-avatar{width:40px;height:40px;border-radius:50%;background:var(--teal);}
   .testi-name b{font-size:14px;display:block;}
   .testi-name span{font-size:13px;color:var(--muted);}
+
+  .testi-arrow{
+    position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;
+    background:var(--white);border:2px solid var(--ink);color:var(--ink);font-size:18px;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;
+    box-shadow:0 6px 16px rgba(27,27,47,.12);
+  }
+  .testi-arrow:hover{background:var(--ink);color:var(--cream);}
+  .testi-arrow:focus-visible{outline:3px solid var(--coral);outline-offset:2px;}
+  .testi-arrow-right{right:-6px;}
+  .testi-arrow-left{left:-6px;}
+  @media (max-width:640px){
+    .testi-arrow{width:36px;height:36px;font-size:15px;}
+    .testi-arrow-right{right:-2px;}
+    .testi-arrow-left{left:-2px;}
+  }
 
   /* Contact */
   .contact{background:var(--ink);color:var(--cream);border-radius:32px;margin:0 24px;padding:64px 48px;}
@@ -805,7 +819,10 @@
         <p class="kicker">מה אומרים עליי</p>
         <h2>לקוחות מספרים</h2>
       </div>
-      <div class="testi-viewport">
+      <div class="testi-outer">
+        <button type="button" class="testi-arrow testi-arrow-right" onclick="testiStep(1)" aria-label="הצגת ההמלצה הבאה">›</button>
+        <button type="button" class="testi-arrow testi-arrow-left" onclick="testiStep(-1)" aria-label="הצגת ההמלצה הקודמת">‹</button>
+        <div class="testi-viewport">
       <div class="testi-track" id="testi-track">
         <div class="testi-card">
           <p>"קיבלתי המלצה חמה על נוי. מהרגע הראשון נוי הגיעה עם חיוך ושידרה מוטיבציה והתלהבות. קצב העבודה מאוד גבוה, התקשורת קלילה וחלקה, תמיד עם חיוך ותמיד קשובה לרצונות. עם זאת, ידעה לתת ביקורת בונה ותיקונים כשצריך. החומרים יוצאים ברמה גבוהה וקלעו בדיוק למה שביקשתי. ניהול הסושיאל לעילא ולעילא. ממליץ בחום לכל מי שמחפש ניהול סושיאל ועיצוב, מקצועי וגם חוויית שירות איכותית, אשר לא מוצאים בקלות בארצנו."</p>
@@ -827,6 +844,7 @@
           <p>"את תותחית. מסבירה ממש מעולה, וגם סבלנית לשיגועים שלי ושל רואי. שבת שלום ותודה על היום."</p>
           <div class="testi-name"><div class="testi-avatar" style="background-image:url('images/pension-bahar.png');background-size:cover;background-position:center;"></div><div><b>אביב קשי</b><span>בעלים, פנסיון בהר</span></div></div>
         </div>
+      </div>
       </div>
       </div>
     </div>
@@ -924,10 +942,11 @@
 
   document.getElementById('year').textContent = new Date().getFullYear();
 
+  var testiStep = function(){}; // reassigned below once the track is ready
+
   (function setupTestiMarquee(){
-    const viewport = document.querySelector('.testi-viewport');
     const track = document.getElementById('testi-track');
-    if (!viewport || !track) return;
+    if (!track) return;
 
     const originalCards = Array.from(track.children);
     originalCards.forEach(function(card){
@@ -938,59 +957,39 @@
 
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Detect this browser's RTL scrollLeft convention (varies by engine).
-    viewport.scrollLeft = 1;
-    const rtlIsNegative = viewport.scrollLeft <= 0;
-    viewport.scrollLeft = 0;
-
+    let offset = 0;
     let paused = false;
     let resumeTimer;
     function pauseAuto(){ paused = true; clearTimeout(resumeTimer); }
     function scheduleResume(){ clearTimeout(resumeTimer); resumeTimer = setTimeout(function(){ paused = false; }, 2200); }
 
-    // Manual drag-to-scroll with mouse
-    let isDragging = false, dragStartX = 0, dragStartScroll = 0;
-    viewport.addEventListener('mousedown', function(e){
-      isDragging = true;
-      viewport.classList.add('dragging');
-      dragStartX = e.pageX;
-      dragStartScroll = viewport.scrollLeft;
-      pauseAuto();
-    });
-    window.addEventListener('mousemove', function(e){
-      if (!isDragging) return;
-      viewport.scrollLeft = dragStartScroll - (e.pageX - dragStartX);
-    });
-    window.addEventListener('mouseup', function(){
-      if (!isDragging) return;
-      isDragging = false;
-      viewport.classList.remove('dragging');
-      scheduleResume();
-    });
-
-    // Manual touch scroll / wheel / native scrollbar interaction
-    viewport.addEventListener('touchstart', pauseAuto, { passive: true });
-    viewport.addEventListener('touchend', scheduleResume);
-    viewport.addEventListener('wheel', function(){ pauseAuto(); scheduleResume(); }, { passive: true });
-    // (no pause on hover - only actual interaction pauses it, per user preference)
-
-    if (reduceMotion) return; // manual scrolling still works; no auto-play
-
-    const speed = 0.55; // px per frame
-    function step(){
-      if (!paused) {
-        const half = track.scrollWidth / 2;
-        if (rtlIsNegative) {
-          viewport.scrollLeft -= speed;
-          if (Math.abs(viewport.scrollLeft) >= half) viewport.scrollLeft += half;
-        } else {
-          viewport.scrollLeft += speed;
-          if (viewport.scrollLeft >= half) viewport.scrollLeft -= half;
-        }
+    function applyOffset(){
+      const half = track.scrollWidth / 2;
+      if (half > 0) {
+        offset = ((offset % half) + half) % half; // keep within [0, half)
       }
-      requestAnimationFrame(step);
+      track.style.transform = 'translateX(' + offset + 'px)';
     }
-    requestAnimationFrame(step);
+
+    testiStep = function(direction){
+      const cardWidth = (track.firstElementChild ? track.firstElementChild.getBoundingClientRect().width : 320) + 24;
+      offset += direction * cardWidth * -1; // arrow "next" (right, dir=1) advances the same way autoplay does
+      applyOffset();
+      pauseAuto();
+      scheduleResume();
+    };
+
+    if (reduceMotion) return; // arrows still work; no auto-play
+
+    const speed = 0.5; // px per frame
+    function frame(){
+      if (!paused) {
+        offset -= speed;
+        applyOffset();
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
   })();
 
   const pricingSelection = {};
