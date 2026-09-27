@@ -232,19 +232,21 @@
   }
 
   /* Testimonials */
-  .testi-outer{position:relative;}
-  .testi-viewport{
-    overflow:hidden;width:100%;
-  }
-  .testi-track{display:flex;gap:24px;width:max-content;will-change:transform;}
+  .testi-outer{position:relative;max-width:600px;margin:0 auto;}
+  .testi-track{position:relative;}
   .testi-card{
-    flex:0 0 320px;background:var(--white);border-radius:var(--radius);padding:28px;
+    display:none;background:var(--white);border-radius:var(--radius);padding:32px;
+    text-align:right;opacity:0;transition:opacity .4s ease;
   }
-  .testi-card p{font-size:16px;margin-bottom:20px;}
+  .testi-card.active{display:block;opacity:1;}
+  .testi-card p{font-size:16px;margin-bottom:20px;line-height:1.7;}
   .testi-name{display:flex;align-items:center;gap:12px;}
   .testi-avatar{width:40px;height:40px;border-radius:50%;background:var(--teal);}
   .testi-name b{font-size:14px;display:block;}
   .testi-name span{font-size:13px;color:var(--muted);}
+  @media (prefers-reduced-motion:reduce){
+    .testi-card{transition:none;}
+  }
 
   .testi-arrow{
     position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;
@@ -254,12 +256,12 @@
   }
   .testi-arrow:hover{background:var(--ink);color:var(--cream);}
   .testi-arrow:focus-visible{outline:3px solid var(--coral);outline-offset:2px;}
-  .testi-arrow-right{right:-6px;}
-  .testi-arrow-left{left:-6px;}
-  @media (max-width:640px){
+  .testi-arrow-right{right:-56px;}
+  .testi-arrow-left{left:-56px;}
+  @media (max-width:720px){
     .testi-arrow{width:36px;height:36px;font-size:15px;}
-    .testi-arrow-right{right:-2px;}
-    .testi-arrow-left{left:-2px;}
+    .testi-arrow-right{right:-4px;}
+    .testi-arrow-left{left:-4px;}
   }
 
   /* Contact */
@@ -820,8 +822,7 @@
       <div class="testi-outer">
         <button type="button" class="testi-arrow testi-arrow-right" onclick="testiStep(1)" aria-label="הצגת ההמלצה הבאה">›</button>
         <button type="button" class="testi-arrow testi-arrow-left" onclick="testiStep(-1)" aria-label="הצגת ההמלצה הקודמת">‹</button>
-        <div class="testi-viewport">
-      <div class="testi-track" id="testi-track">
+        <div class="testi-track" id="testi-track">
         <div class="testi-card">
           <p>"קיבלתי המלצה חמה על נוי. מהרגע הראשון נוי הגיעה עם חיוך ושידרה מוטיבציה והתלהבות. קצב העבודה מאוד גבוה, התקשורת קלילה וחלקה, תמיד עם חיוך ותמיד קשובה לרצונות. עם זאת, ידעה לתת ביקורת בונה ותיקונים כשצריך. החומרים יוצאים ברמה גבוהה וקלעו בדיוק למה שביקשתי. ניהול הסושיאל לעילא ולעילא. ממליץ בחום לכל מי שמחפש ניהול סושיאל ועיצוב, מקצועי וגם חוויית שירות איכותית, אשר לא מוצאים בקלות בארצנו."</p>
           <div class="testi-name"><div class="testi-avatar" style="background-image:url('images/adam-basport-cover.png');background-size:cover;background-position:center;"></div><div><b>שימי עשור</b><span>מנהל סטודיו, אדם בספורט</span></div></div>
@@ -842,7 +843,6 @@
           <p>"את תותחית. מסבירה ממש מעולה, וגם סבלנית לשיגועים שלי ושל רואי. שבת שלום ותודה על היום."</p>
           <div class="testi-name"><div class="testi-avatar" style="background-image:url('images/pension-bahar.png');background-size:cover;background-position:center;"></div><div><b>אביב קשי</b><span>בעלים, פנסיון בהר</span></div></div>
         </div>
-      </div>
       </div>
       </div>
     </div>
@@ -940,54 +940,36 @@
 
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  var testiStep = function(){}; // reassigned below once the track is ready
+  var testiStep = function(){}; // reassigned below once cards are ready
 
-  (function setupTestiMarquee(){
+  (function setupTestiRotator(){
     const track = document.getElementById('testi-track');
     if (!track) return;
+    const cards = Array.from(track.children);
+    if (cards.length === 0) return;
 
-    const originalCards = Array.from(track.children);
-    originalCards.forEach(function(card){
-      const clone = card.cloneNode(true);
-      clone.setAttribute('aria-hidden', 'true');
-      track.appendChild(clone);
-    });
+    let index = 0;
+    let timer;
 
-    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function show(i){
+      index = ((i % cards.length) + cards.length) % cards.length;
+      cards.forEach(function(card, idx){
+        card.classList.toggle('active', idx === index);
+      });
+    }
 
-    let offset = 0;
-    let paused = false;
-    let resumeTimer;
-    function pauseAuto(){ paused = true; clearTimeout(resumeTimer); }
-    function scheduleResume(){ clearTimeout(resumeTimer); resumeTimer = setTimeout(function(){ paused = false; }, 2200); }
-
-    function applyOffset(){
-      const half = track.scrollWidth / 2;
-      if (half > 0) {
-        offset = ((offset % half) + half) % half; // keep within [0, half)
-      }
-      track.style.transform = 'translateX(' + offset + 'px)';
+    function resetAutoplay(){
+      clearInterval(timer);
+      timer = setInterval(function(){ show(index + 1); }, 3000);
     }
 
     testiStep = function(direction){
-      const cardWidth = (track.firstElementChild ? track.firstElementChild.getBoundingClientRect().width : 320) + 24;
-      offset += direction * cardWidth * -1; // arrow "next" (right, dir=1) advances the same way autoplay does
-      applyOffset();
-      pauseAuto();
-      scheduleResume();
+      show(index + direction);
+      resetAutoplay();
     };
 
-    if (reduceMotion) return; // arrows still work; no auto-play
-
-    const speed = 0.5; // px per frame
-    function frame(){
-      if (!paused) {
-        offset -= speed;
-        applyOffset();
-      }
-      requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
+    show(0);
+    resetAutoplay();
   })();
 
   const pricingSelection = {};
