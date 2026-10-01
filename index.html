@@ -1037,7 +1037,7 @@
 
     const total = names.reduce(function(sum, n){ return sum + pricingSelection[n]; }, 0);
     const msg = 'היי נוי! שמי ' + fullName + '. שם העסק: ' + business + ' - ' + bizDesc +
-      '. אשמח לשמוע פרטים על: ' + names.join(', ') + ' (סה"כ משוער: ' + total.toLocaleString('he-IL') + ' ₪) 😊';
+      '. אשמח לשמוע פרטים על: ' + names.join(', ') + ' (סה"כ משוער: ' + total.toLocaleString('he-IL') + ' ₪)';
     btn.href = 'https://wa.me/972527317927?text=' + encodeURIComponent(msg);
   }
 
