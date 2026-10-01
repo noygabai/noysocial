@@ -204,25 +204,26 @@
   .addon-text span{font-size:13px;color:var(--muted);}
   .addon-card .price-select-btn.small{padding:9px 18px;font-size:13px;white-space:nowrap;}
 
-  .pricing-cart{
-    background:var(--ink);border-radius:20px;padding:24px 28px;
-    display:flex;flex-direction:column;gap:16px;
+  .pricing-cta-row{display:flex;justify-content:center;margin-bottom:20px;}
+  .pricing-cta-btn{
+    background:var(--ink);color:var(--cream);font-family:'Rubik';font-weight:700;font-size:15px;
+    padding:14px 28px;border-radius:100px;border:none;cursor:pointer;
   }
-  .pricing-cart-bottom{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
-  #pricing-cart-items{color:var(--cream);font-size:14px;line-height:1.7;}
-  #pricing-cart-items b{color:var(--yellow);}
-  .pricing-cart-fields{display:flex;gap:10px;flex-wrap:wrap;}
+  #cart-modal .modal-box{max-width:460px;}
+  #cart-modal h3{font-size:22px;font-weight:900;margin-bottom:16px;}
+  .pricing-cart-items-modal{color:var(--ink);font-size:14px;line-height:1.7;margin-bottom:12px;}
+  .pricing-cart-items-modal b{color:var(--coral);}
+  .pricing-cart-fields{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
   .pricing-input{
-    background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.25);border-radius:10px;
-    padding:11px 14px;font-size:13.5px;color:var(--cream);font-family:'Heebo';min-width:150px;
+    background:var(--cream);border:1.5px solid rgba(27,27,47,.15);border-radius:10px;
+    padding:12px 14px;font-size:14px;color:var(--ink);font-family:'Heebo';width:100%;box-sizing:border-box;
   }
-  .pricing-input::placeholder{color:#8B899C;}
+  .pricing-input::placeholder{color:var(--muted);}
   .pricing-input:focus{outline:none;border-color:var(--coral);}
-  .pricing-input-wide{flex:1;min-width:220px;}
-  .pricing-hint{font-size:12px;color:#8B899C;margin-top:-4px;}
+  .pricing-hint{font-size:12px;color:var(--muted);margin-bottom:12px;}
   .pricing-cart-btn{
-    background:var(--coral);color:var(--white);font-family:'Rubik';font-weight:700;font-size:14px;
-    padding:14px 26px;border-radius:100px;white-space:nowrap;transition:opacity .2s;
+    display:block;text-align:center;background:var(--coral);color:var(--white);font-family:'Rubik';
+    font-weight:700;font-size:15px;padding:14px 26px;border-radius:100px;transition:opacity .2s;
   }
   .pricing-note{font-size:12.5px;color:var(--muted);text-align:center;margin-top:16px;}
 
@@ -801,21 +802,29 @@
         </div>
       </div>
 
-      <div class="pricing-cart">
-        <div id="pricing-cart-items">עוד לא נבחר כלום - לחצו "הוספה" על מה שמעניין אתכם</div>
-        <p class="pricing-hint">* יש למלא שם מלא, שם העסק ופירוט קצר כדי לשלוח</p>
-        <div class="pricing-cart-bottom">
-          <div class="pricing-cart-fields">
-            <input type="text" id="pricing-name" class="pricing-input" placeholder="שם מלא *">
-            <input type="text" id="pricing-business" class="pricing-input" placeholder="שם העסק *">
-            <input type="text" id="pricing-desc" class="pricing-input pricing-input-wide" placeholder="פירוט קצר על העסק *">
-          </div>
-          <a id="pricing-cart-btn" class="pricing-cart-btn" href="#" target="_blank" rel="noopener">שליחת הבחירה בוואטסאפ</a>
-        </div>
+      <div class="pricing-cta-row">
+        <button type="button" class="pricing-cta-btn" onclick="openCartModal()">
+          🛒 לצפייה בבחירה ושליחה <span id="pricing-cta-count">(0)</span>
+        </button>
       </div>
       <p class="pricing-note">המחירים הם בסיס למו"מ ועשויים להשתנות בהתאם להיקף ולצרכים הספציפיים של העסק.</p>
     </div>
   </section>
+
+  <div class="modal-backdrop" id="cart-modal" onclick="if(event.target===this) closeCartModal()">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeCartModal()" aria-label="סגירה">✕</button>
+      <h3>העגלה שלך</h3>
+      <div id="pricing-cart-items" class="pricing-cart-items-modal">עוד לא נבחר כלום - לחצו "הוספה" על מה שמעניין אתכם</div>
+      <p class="pricing-hint">* יש למלא שם מלא, שם העסק ופירוט קצר כדי לשלוח</p>
+      <div class="pricing-cart-fields">
+        <input type="text" id="pricing-name" class="pricing-input" placeholder="שם מלא *">
+        <input type="text" id="pricing-business" class="pricing-input" placeholder="שם העסק *">
+        <input type="text" id="pricing-desc" class="pricing-input pricing-input-wide" placeholder="פירוט קצר על העסק *">
+      </div>
+      <a id="pricing-cart-btn" class="pricing-cart-btn" href="#" target="_blank" rel="noopener">שליחת הבחירה בוואטסאפ</a>
+    </div>
+  </div>
 
   <section id="testimonials">
     <div class="wrap">
@@ -905,7 +914,7 @@
 <!-- כפתור ותפריט נגישות -->
 <button id="a11y-toggle" onclick="toggleA11yPanel()" aria-label="פתיחת תפריט נגישות" title="נגישות">♿</button>
 
-<a id="cart-float" href="#pricing" aria-label="לצפייה בעגלת הבחירה">
+<a id="cart-float" href="javascript:void(0)" onclick="openCartModal()" aria-label="לצפייה בעגלת הבחירה">
   <span id="cart-float-icon">🛒</span>
   <span id="cart-float-count">0</span>
 </a>
@@ -971,6 +980,15 @@
   })();
 
   const pricingSelection = {};
+
+  function openCartModal(){
+    document.getElementById('cart-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeCartModal(){
+    document.getElementById('cart-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
   function togglePricingItem(btn, name, price){
     if (pricingSelection[name] !== undefined) {
       delete pricingSelection[name];
@@ -998,7 +1016,9 @@
     }
     const cartFloat = document.getElementById('cart-float');
     const cartCount = document.getElementById('cart-float-count');
+    const ctaCount = document.getElementById('pricing-cta-count');
     cartCount.textContent = names.length;
+    if (ctaCount) ctaCount.textContent = '(' + names.length + ')';
     cartFloat.classList.toggle('visible', names.length > 0);
     buildPricingWhatsappLink();
   }
@@ -1379,6 +1399,7 @@
   document.addEventListener('keydown', function(e){
     if(e.key === 'Escape' && modal.classList.contains('open')) closeProject();
     if(e.key === 'Escape' && infoModal.classList.contains('open')) closeInfoModal();
+    if(e.key === 'Escape' && document.getElementById('cart-modal').classList.contains('open')) closeCartModal();
     if(e.key === 'Escape') document.getElementById('a11y-panel').classList.remove('open');
   });
 </script>
