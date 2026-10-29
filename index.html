@@ -696,8 +696,9 @@
   html.dark .clients-row span{border-color:rgba(255,255,255,.35);}
   html.dark #loader{background:#12121C;}
   /* Who am I heading */
-  .stats{padding:64px 0 28px;}
-  .stats-heading{font-size:clamp(56px,11vw,120px);line-height:1;}
+  .stats{padding:26px 0;margin:0 24px;border-radius:32px;}
+  @media (max-width:520px){.stats{margin:0 14px;border-radius:24px;}}
+  .stats-heading{font-size:clamp(44px,7vw,64px);line-height:1.1;}
   .stats-heading .wh-word{display:inline-block;position:relative;}
   .stats-heading .ch{display:inline-block;opacity:0;transform:translateY(60%) rotate(8deg);transition:opacity .6s ease,transform .7s cubic-bezier(.2,1.3,.4,1);transition-delay:var(--cd,0s);}
   .stats-heading.in .ch{opacity:1;transform:none;}
@@ -758,7 +759,6 @@
     <div class="wrap">
       <p class="stats-heading" id="who-heading" aria-label="מי אני"><span class="wh-word">מי</span> <span class="wh-word accent-inline">אני</span></p>
     </div>
-    <div class="marquee" aria-hidden="true"><div class="marquee-track"><span>עיצוב גרפי ✦ ניהול סושיאל ✦ UGC ✦ קריאייטיב ✦ עריכת וידאו ✦ מיתוג ✦ </span><span>עיצוב גרפי ✦ ניהול סושיאל ✦ UGC ✦ קריאייטיב ✦ עריכת וידאו ✦ מיתוג ✦ </span></div></div>
   </div>
 
   <section id="about">
