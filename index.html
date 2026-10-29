@@ -592,8 +592,6 @@
   #project-modal .modal-media-item.has-caption .modal-video-meta{grid-column:1;}
   #project-modal .modal-caption{grid-column:2;grid-row:1/span 2;white-space:pre-line;font-size:16px;line-height:1.75;color:var(--ink);background:var(--cream);border-radius:18px;padding:22px 26px;}
   @media (max-width:700px){#project-modal .modal-media-item.has-caption{grid-template-columns:1fr}#project-modal .modal-caption{grid-column:1;grid-row:auto}}
-  @keyframes cardFlip{0%{transform:perspective(900px) rotateY(0) scale(1)}45%{transform:perspective(900px) rotateY(90deg) scale(1.05)}55%{transform:perspective(900px) rotateY(90deg) scale(1.05)}100%{transform:perspective(900px) rotateY(0) scale(1)}}
-  .portfolio-item.flipping{animation:cardFlip .6s ease-in-out;}
 
   /* Decorative circles per section */
   #about,#work,#pricing,#testimonials,#contact{position:relative;overflow:hidden;isolation:isolate;}
@@ -615,6 +613,33 @@
   @keyframes gentleA{0%,100%{transform:translate(0,0)}50%{transform:translate(10px,14px)}}
   @keyframes gentleB{0%,100%{transform:translate(0,0)}50%{transform:translate(-10px,-14px)}}
   @media (max-width:700px){#about::before{width:120px!important;height:120px!important;right:-60px!important}#about::after{width:45px!important;height:45px!important;left:-22px!important}#work::before{width:65px!important;height:65px!important;left:-32px!important}#work::after{width:125px!important;height:125px!important;right:-62px!important}#pricing::before{width:50px!important;height:50px!important;left:-25px!important}#pricing::after{width:105px!important;height:105px!important;right:-52px!important}#testimonials::before{width:100px!important;height:100px!important;left:-50px!important}#testimonials::after{width:55px!important;height:55px!important;right:-27px!important}#contact::before{width:130px!important;height:130px!important;right:-65px!important}#contact::after{width:60px!important;height:60px!important;left:-30px!important}}
+
+  #project-modal .modal-videos{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+  .modal-media-item.zoomable{position:relative;cursor:zoom-in;}
+  .modal-media-item.zoomable video,.modal-media-item.zoomable img{transition:transform .3s ease,box-shadow .3s ease;}
+  .modal-media-item.zoomable:hover video,.modal-media-item.zoomable:hover img{transform:scale(1.02);box-shadow:0 12px 30px rgba(0,0,0,.2);}
+  .play-badge{position:absolute;top:calc(50% - 30px);left:50%;transform:translate(-50%,-50%);width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.9);color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:22px;padding-left:4px;pointer-events:none;box-shadow:0 6px 18px rgba(0,0,0,.3);}
+  .lightbox{display:none;position:fixed;inset:0;z-index:400;background:rgba(15,15,28,.94);align-items:center;justify-content:center;gap:16px;padding:64px 16px 56px;}
+  .lightbox.open{display:flex;}
+  .lb-stage{width:min(88vw,1000px);height:calc(100vh - 140px);background:#000;border-radius:18px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .lb-stage img,.lb-stage video{width:100%;height:100%;object-fit:contain;display:block;}
+  .lb-arrow{flex-shrink:0;width:52px;height:52px;border-radius:50%;border:none;background:rgba(255,255,255,.95);color:var(--ink);font-size:30px;line-height:1;cursor:pointer;}
+  .lb-arrow:hover{background:var(--yellow);}
+  .lb-back{position:absolute;top:16px;right:16px;border:none;background:rgba(255,255,255,.95);color:var(--ink);font-weight:800;font-size:16px;padding:10px 18px;border-radius:100px;cursor:pointer;}
+  .lb-back:hover{background:var(--yellow);}
+  .lb-info{position:absolute;bottom:16px;left:0;right:0;display:flex;justify-content:center;gap:14px;color:#fff;font-size:15px;font-weight:700;}
+  .lb-info #lb-count{opacity:.7}
+  @media (max-width:700px){
+    .lightbox{flex-wrap:wrap;padding:60px 10px 80px;align-content:center;}
+    .lb-stage{width:100%;height:calc(100vh - 230px);order:1}
+    .lb-arrow{order:2;width:48px;height:48px}
+  }
+  @keyframes popIn{0%{opacity:0;transform:scale(.82) translateY(20px)}60%{opacity:1;transform:scale(1.03) translateY(0)}100%{opacity:1;transform:scale(1)}}
+  @keyframes fadeBg{from{opacity:0}to{opacity:1}}
+  .modal-backdrop.open{animation:fadeBg .25s ease both;}
+  .modal-backdrop.open .modal-box{animation:popIn .4s cubic-bezier(.2,.9,.3,1) both;}
+  .lightbox.open .lb-stage{animation:popIn .35s cubic-bezier(.2,.9,.3,1) both;}
+  @media (prefers-reduced-motion:reduce){.modal-backdrop.open,.modal-backdrop.open .modal-box,.lightbox.open .lb-stage{animation:none}}
 </style>
 </head>
 <body>
@@ -1068,6 +1093,14 @@
 </div>
 
 <!-- מודל כללי להצהרת נגישות ומדיניות פרטיות -->
+
+<div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="תצוגה מוגדלת" onclick="if(event.target===this) closeLightbox()">
+  <button type="button" class="lb-back" onclick="closeLightbox()" aria-label="חזרה לפרויקט">→ חזרה</button>
+  <button type="button" class="lb-arrow lb-prev" id="lb-prev" onclick="lightboxStep(-1)" aria-label="הקודם">›</button>
+  <div class="lb-stage" id="lb-stage"></div>
+  <button type="button" class="lb-arrow lb-next" id="lb-next" onclick="lightboxStep(1)" aria-label="הבא">‹</button>
+  <div class="lb-info"><span id="lb-caption"></span><span id="lb-count"></span></div>
+</div>
 <div class="modal-backdrop" id="info-modal" onclick="if(event.target===this) closeInfoModal()">
   <div class="modal-box">
     <button class="modal-close" onclick="closeInfoModal()" aria-label="סגירה">✕</button>
@@ -1453,7 +1486,7 @@
     },
     'matzal': {
       services: ["כתיבת תסריטים","עריכת וידאו","איתור פוטג'ים מתאימים","ראיון והקלטה בזום","עיצוב פוסטים","סרטוני גיוס","סרטוני עדות"],
-      result: "סיוע טלפוני חינם במיצוי זכויות, שמחבר בין מתנדבים וסטודנטים למשפטים לבין אנשים שזקוקים לעזרה.",
+      result: "מסרטון הגיוס הראשון, ב-2025, גויסו 45 מתנדבים.",
       problem: "בעקבות מצב החירום, עשרות אלפי משפחות נאלצו להתמודד עם בירוקרטיה, ושיעור מיצוי הזכויות בקרב תושבי הצפון, אנשים עם מוגבלויות, אזרחים ותיקים ונפגעי פעולות איבה נמוך במיוחד. הפרויקט היה צריך מתנדבים וסטודנטים למשפטים שיעניקו להם סיוע.",
       help: "אחראית על כל התוכן של הפרויקט מההתחלה ועד הסוף: כתבתי את התסריטים, מצאתי פוטג'ים מתאימים, ראיינתי והקלטתי בזום את שקד, וערכתי את סרטוני הגיוס והעדויות, ועיצבתי את הפוסטים.",
       tag: "עמותה",
@@ -1461,11 +1494,11 @@
       desc: "פרויקט מז\"ל - מיצוי זכויות לתושב - מעניק סיוע טלפוני ללא עלות במיצוי זכויות לאוכלוסיות הזקוקות לכך. כתבתי את התסריטים, מצאתי פוטג'ים, ראיינתי והקלטתי בזום, ערכתי את הסרטונים ועיצבתי את הפוסטים.",
       instagram: "",
       media: [
-        { type: "video", label: "גיוס סטודנטים למשפטים", src: "videos/matzal-1.mp4" },
+        { type: "video", label: "גיוס סטודנטים למשפטים – 2025", src: "videos/matzal-1.mp4", views: "גויסו 45 מתנדבים" },
         { type: "video", label: "גיוס מתנדבים – אוקטובר 2026", src: "videos/matzal-oct26.mp4" },
         { type: "video", label: "עדות – שקד (ראיון בזום)", src: "videos/matzal-edut-shaked.mp4", wide: true },
         { type: "video", label: "עדות – לירית, נעזרה בפרויקט", src: "videos/matzal-edut-lirit.mp4", wide: true },
-        { type: "image", label: "פוסטר הפרויקט", src: "images/matzal-poster.png" }
+        { type: "image", label: "פוסט גיוס מתנדבים", src: "images/matzal-poster.png" }
       ]
     },
     'harel': {
@@ -1549,12 +1582,7 @@
     }
   };
 
-  function flipOpen(item){
-    if(window.matchMedia('(prefers-reduced-motion:reduce)').matches){ openProject(item); return; }
-    item.classList.add('flipping');
-    setTimeout(function(){ openProject(item); }, 260);
-    setTimeout(function(){ item.classList.remove('flipping'); }, 700);
-  }
+  function flipOpen(item){ openProject(item); }
   function openProject(item){
     const key = item.dataset.project;
     modalVideosMulti.innerHTML = '';
@@ -1578,6 +1606,7 @@
         story.style.display='none';dEl.style.display='';dEl.textContent=p.desc||'';
       }
 
+      currentMedia = p.media.filter(function(m){ return m.type !== 'instagram'; });
       p.media.forEach(function(m){
         const block = document.createElement('div');
         block.className = 'modal-media-item' + (m.wide ? ' wide' : '') + (m.caption ? ' has-caption' : '');
@@ -1587,14 +1616,24 @@
           el.src = m.src;
           el.alt = m.label || '';
           block.appendChild(el);
+          block.classList.add('zoomable');
+          block.addEventListener('click', function(){ openLightbox(currentMedia.indexOf(m)); });
         } else if(m.type === 'instagram'){
           block.innerHTML = '<blockquote class="instagram-media" data-instgrm-permalink="' + m.src + '" data-instgrm-version="14"></blockquote>';
         } else {
           el = document.createElement('video');
-          el.controls = true;
+          el.controls = false;
+          el.muted = true;
+          el.preload = 'metadata';
           el.playsInline = true;
-          el.src = m.src;
+          el.src = m.src + '#t=0.5';
           block.appendChild(el);
+          const pb = document.createElement('span');
+          pb.className = 'play-badge';
+          pb.textContent = '\u25B6';
+          block.appendChild(pb);
+          block.classList.add('zoomable');
+          block.addEventListener('click', function(){ openLightbox(currentMedia.indexOf(m)); });
         }
         const meta = document.createElement('div');
         meta.className = 'modal-video-meta';
@@ -1637,7 +1676,46 @@
     document.body.style.overflow = 'hidden';
   }
 
+  var currentMedia = [], lbIndex = 0;
+  function renderLightbox(){
+    var m = currentMedia[lbIndex], stage = document.getElementById('lb-stage');
+    stage.querySelectorAll('video').forEach(function(v){ v.pause(); });
+    stage.innerHTML = '';
+    var el;
+    if(m.type === 'image'){ el = document.createElement('img'); el.src = m.src; el.alt = m.label || ''; }
+    else { el = document.createElement('video'); el.src = m.src; el.controls = true; el.playsInline = true; el.autoplay = true; }
+    stage.appendChild(el);
+    document.getElementById('lb-caption').textContent = (m.label || '') + (m.views ? ' · ' + m.views : '');
+    document.getElementById('lb-count').textContent = (lbIndex + 1) + ' / ' + currentMedia.length;
+    var multi = currentMedia.length > 1;
+    document.getElementById('lb-next').style.display = multi ? '' : 'none';
+    document.getElementById('lb-prev').style.display = multi ? '' : 'none';
+  }
+  function openLightbox(i){
+    if(i < 0) return;
+    lbIndex = i;
+    document.getElementById('lightbox').classList.add('open');
+    renderLightbox();
+  }
+  function lightboxStep(d){
+    lbIndex = (lbIndex + d + currentMedia.length) % currentMedia.length;
+    renderLightbox();
+  }
+  function closeLightbox(){
+    var lb = document.getElementById('lightbox');
+    lb.classList.remove('open');
+    document.getElementById('lb-stage').querySelectorAll('video').forEach(function(v){ v.pause(); });
+    document.getElementById('lb-stage').innerHTML = '';
+  }
+  document.addEventListener('keydown', function(e){
+    if(!document.getElementById('lightbox').classList.contains('open')) return;
+    if(e.key === 'Escape'){ closeLightbox(); e.stopPropagation(); }
+    else if(e.key === 'ArrowLeft'){ lightboxStep(1); }
+    else if(e.key === 'ArrowRight'){ lightboxStep(-1); }
+  }, true);
+
   function closeProject(){
+    closeLightbox();
     modal.classList.remove('open');
     document.body.style.overflow = '';
     modalVideo.pause();
