@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>נוי גבאי | ניהול סושיאל</title>
 <meta name="description" content="נוי גבאי - ניהול רשתות חברתיות, יצירת תוכן וליווי מותגי">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="he_IL">
+<meta property="og:title" content="נוי גבאי | ניהול סושיאל, עיצוב ו-UGC">
+<meta property="og:description" content="מנהלת לעסק שלך את הסושיאל, כדי שתוכל לנהל את העסק. תיק עבודות, חבילות ויצירת קשר.">
+<meta property="og:url" content="https://noyg-portfolio.vercel.app/">
+<meta property="og:image" content="https://noyg-portfolio.vercel.app/images/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://noyg-portfolio.vercel.app/images/og-image.jpg">
+<meta name="theme-color" content="#FFF8EF">
+<script>try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;900&family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -647,6 +659,55 @@
   #project-modal .modal-video-meta{display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:space-between;margin-top:10px;min-width:0;}
   #project-modal .modal-video-label,#project-modal .modal-video-stat{overflow-wrap:anywhere;}
   #project-modal .modal-media-item.zoomable:hover video,#project-modal .modal-media-item.zoomable:hover img{transform:none;}
+  #project-modal .modal-videos{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;}
+  #project-modal .modal-media-item{flex:0 0 min(100%,260px);width:min(100%,260px);}
+  #project-modal .modal-media-item.wide{flex:1 1 100%;width:100%;max-width:640px;}
+  @media (max-width:700px){#project-modal .modal-media-item{flex:0 0 calc(50% - 8px);width:calc(50% - 8px);}#project-modal .modal-videos{gap:16px 16px;}#project-modal .modal-media-item.wide{flex:1 1 100%;width:100%;}}
+
+  /* WhatsApp float */
+  #wa-float{position:fixed;bottom:24px;right:24px;width:58px;height:58px;border-radius:50%;background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;z-index:150;box-shadow:0 8px 22px rgba(0,0,0,.25);transition:transform .25s ease;}
+  #wa-float:hover{transform:scale(1.1);}
+  /* Theme toggle */
+  @media (max-width:860px){#theme-toggle{margin-inline-start:auto!important;margin-inline-end:6px!important;}}
+  #theme-toggle{background:rgba(127,127,140,.16);border:none;color:var(--ink);width:34px;height:34px;border-radius:50%;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;margin-inline:8px;transition:background .2s ease,transform .2s ease;}
+  #theme-toggle:hover{background:rgba(127,127,140,.3);transform:scale(1.06);}
+  /* Clients */
+  .clients-row{display:flex;flex-wrap:wrap;gap:12px;}
+  .clients-row span{background:var(--white);border:2px solid var(--ink);border-radius:100px;padding:10px 22px;font-family:'Rubik';font-weight:700;font-size:16px;}
+  /* FAQ */
+  .faq-list{max-width:780px;display:grid;gap:12px;}
+  .faq-item{background:var(--white);border-radius:18px;padding:0;border:2px solid transparent;transition:border-color .2s ease;}
+  .faq-item[open]{border-color:var(--coral);}
+  .faq-item summary{cursor:pointer;list-style:none;padding:18px 22px;font-family:'Rubik';font-weight:700;font-size:17px;display:flex;justify-content:space-between;align-items:center;gap:16px;}
+  .faq-item summary::-webkit-details-marker{display:none;}
+  .faq-item summary::after{content:"+";font-size:26px;line-height:1;color:var(--coral);transition:transform .25s ease;flex-shrink:0;}
+  .faq-item[open] summary::after{transform:rotate(45deg);}
+  .faq-item p{padding:0 22px 20px;color:var(--muted);font-size:16px;line-height:1.7;}
+  @media (max-width:700px){#wa-float{width:52px;height:52px;bottom:20px;right:16px}}
+  /* Dark mode */
+  html.dark{--cream:#12121C;--white:#1D1D2E;--ink:#F2EFE9;--muted:#A9A7B8;color-scheme:dark;}
+  html.dark header{background:rgba(18,18,28,.9);border-bottom-color:rgba(255,255,255,.1);}
+  html.dark .stats,html.dark .contact,html.dark .modal-result{--white:#fff;--cream:#F2EFE9;--ink:#25253D;}
+  html.dark .modal-box,html.dark .testi-card,html.dark .price-card,html.dark .service-card,html.dark .faq-item{border-color:rgba(255,255,255,.08);}
+  html.dark .testi-card::before{color:rgba(255,255,255,.07);}
+  html.dark .btn-outline{color:var(--ink);border-color:var(--ink);}
+  html.dark .nav-cta,html.dark .tab-btn.active,html.dark .price-badge{color:#fff;}
+  html.dark .eyebrow-tag{background:var(--white);border-color:var(--ink);}
+  html.dark .clients-row span{border-color:rgba(255,255,255,.35);}
+  html.dark #loader{background:#12121C;}
+  /* Who am I heading */
+  .stats{padding:64px 0 28px;}
+  .stats-heading{font-size:clamp(56px,11vw,120px);line-height:1;}
+  .stats-heading .wh-word{display:inline-block;position:relative;}
+  .stats-heading .ch{display:inline-block;opacity:0;transform:translateY(60%) rotate(8deg);transition:opacity .6s ease,transform .7s cubic-bezier(.2,1.3,.4,1);transition-delay:var(--cd,0s);}
+  .stats-heading.in .ch{opacity:1;transform:none;}
+  .stats-heading .accent-inline::after{content:"";position:absolute;right:0;bottom:-4px;height:8px;width:0;background:var(--coral);border-radius:6px;transition:width .8s cubic-bezier(.2,.8,.2,1) .7s;z-index:-1;}
+  .stats-heading.in .accent-inline::after{width:100%;}
+  .marquee{position:relative;z-index:1;margin-top:26px;overflow:hidden;direction:ltr;}
+  .marquee-track{display:flex;width:max-content;animation:marq 28s linear infinite;}
+  .marquee-track span{white-space:pre;font-family:'Rubik';font-weight:900;font-size:clamp(22px,3.4vw,38px);color:transparent;-webkit-text-stroke:1.5px rgba(255,248,239,.45);padding-right:0;}
+  @keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion:reduce){.stats-heading .ch{opacity:1;transform:none;transition:none}.marquee-track{animation:none}}
 </style>
 </head>
 <body>
@@ -667,6 +728,7 @@
       <a href="#contact">יצירת קשר</a>
     </div>
     <a href="#contact" class="nav-cta">בואו נדבר</a>
+    <button type="button" id="theme-toggle" aria-label="מעבר למצב כהה" title="מצב כהה/בהיר" onclick="toggleTheme()"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M20.4 14.6A8.5 8.5 0 0 1 9.4 3.6a.6.6 0 0 0-.8-.7A9.6 9.6 0 1 0 21.1 15.4a.6.6 0 0 0-.7-.8z"/></svg></button>
     <button class="menu-btn" aria-label="פתיחת תפריט" onclick="toggleMobileMenu()">☰</button>
   </nav>
 </header>
@@ -694,8 +756,9 @@
 
   <div class="stats">
     <div class="wrap">
-      <p class="stats-heading">מי <span class="accent-inline">אני</span></p>
+      <p class="stats-heading" id="who-heading" aria-label="מי אני"><span class="wh-word">מי</span> <span class="wh-word accent-inline">אני</span></p>
     </div>
+    <div class="marquee" aria-hidden="true"><div class="marquee-track"><span>עיצוב גרפי ✦ ניהול סושיאל ✦ UGC ✦ קריאייטיב ✦ עריכת וידאו ✦ מיתוג ✦ </span><span>עיצוב גרפי ✦ ניהול סושיאל ✦ UGC ✦ קריאייטיב ✦ עריכת וידאו ✦ מיתוג ✦ </span></div></div>
   </div>
 
   <section id="about">
@@ -888,6 +951,13 @@
     </div>
   </div>
 
+  <section id="clients" aria-label="לקוחות">
+    <div class="wrap">
+      <div class="section-head"><p class="kicker">עבדתי עם</p><h2>עסקים, מותגים ועמותות</h2></div>
+      <div class="clients-row"><span>הראל</span><span>אגד</span><span>אוניברסיטת תל אביב</span><span>הכשרה</span><span>דינרוז</span><span>נמיז</span><span>אוריאל</span><span>עמותת גוונים</span><span>פרויקט מז"ל</span><span>אדם בספורט</span><span>ניחוחות סמדר</span></div>
+    </div>
+  </section>
+
   <section id="pricing">
     <div class="wrap">
       <div class="section-head">
@@ -1026,6 +1096,13 @@
     </div>
   </section>
 
+  <section id="faq">
+    <div class="wrap">
+      <div class="section-head"><p class="kicker">שאלות נפוצות</p><h2>לפני שמתחילים</h2></div>
+      <div class="faq-list"><details class="faq-item"><summary>איך נראה תהליך העבודה?</summary><p>מתחילים בשיחת היכרות קצרה כדי להבין את העסק והמטרות. משם בונים אסטרטגיה וגאנט תוכן, ועובדים בצורה שוטפת עם עדכונים לאורך הדרך.</p></details><details class="faq-item"><summary>האם אני צריך/ה לצלם בעצמי?</summary><p>לא חייבים. אפשר לשלב ימי צילום איתי, או לקבל הכוונה וליווי לצילום תכנים בעצמכם. מה שמתאים לכם יותר.</p></details><details class="faq-item"><summary>אפשר לבחור רק שירות אחד?</summary><p>בהחלט. אפשר לבחור שירות אחד או לשלב כמה, ולהרכיב את הבחירה בעגלה שבדף המחירים. אחרי זה נשלח אלי פנייה ואחזור אליכם.</p></details><details class="faq-item"><summary>מה זה UGC ולמי זה מתאים?</summary><p>סרטונים בגובה העיניים, בסגנון של משתמש אמיתי, שמציגים מוצר או שירות בצורה אמינה. מתאים למותגים ועסקים שרוצים תוכן אותנטי לרשתות ולפרסום.</p></details><details class="faq-item"><summary>איך מתחילים?</summary><p>הכי קל לשלוח הודעה בוואטסאפ או למלא פנייה דרך העגלה. נקבע שיחת היכרות ונתקדם משם.</p></details><details class="faq-item"><summary>האם תוכלי ללוות אותי גם אם אני רוצה לנהל את העמוד בעצמי?</summary><p>כן. אפשר לקבל הדרכה איך לצלם, לתזמן ולהעלות תוכן, כך שתוכלו להמשיך לבד בביטחון.</p></details></div>
+    </div>
+  </section>
+
   <section id="contact">
     <div class="contact">
       <div class="contact-wrap">
@@ -1076,6 +1153,9 @@
   </div>
 </footer>
 
+<a id="wa-float" href="https://wa.me/972527317927" target="_blank" rel="noopener" aria-label="שליחת הודעה בוואטסאפ" title="וואטסאפ">
+  <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.1c-.24.68-1.39 1.32-1.92 1.4-.49.08-1.11.11-1.79-.11-.41-.13-.94-.31-1.62-.6-2.85-1.23-4.71-4.1-4.85-4.29-.14-.19-1.16-1.54-1.16-2.94 0-1.4.73-2.08.99-2.37.26-.28.57-.35.76-.35h.55c.18 0 .42-.07.65.5.24.58.82 2 .89 2.15.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.28.29-.12.57.16.28.71 1.17 1.52 1.9 1.05.94 1.93 1.23 2.21 1.37.28.14.44.12.61-.07.17-.19.71-.83.9-1.11.19-.28.38-.24.63-.14.26.09 1.65.78 1.93.92.28.14.47.21.54.33.07.12.07.68-.17 1.36z"/></svg>
+</a>
 <!-- כפתור ותפריט נגישות -->
 <button id="a11y-toggle" onclick="toggleA11yPanel()" aria-label="פתיחת תפריט נגישות" title="נגישות">♿</button>
 
@@ -1304,6 +1384,36 @@
     });
   })();
 
+
+  (function(){
+    var h=document.getElementById('who-heading'); if(!h) return;
+    var i=0;
+    h.querySelectorAll('.wh-word').forEach(function(w){
+      var t=w.textContent; w.textContent='';
+      t.split('').forEach(function(c){
+        var sp=document.createElement('span'); sp.className='ch'; sp.textContent=c;
+        sp.style.setProperty('--cd',(i*0.12)+'s'); i++; w.appendChild(sp);
+      });
+    });
+    if('IntersectionObserver' in window){
+      var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){h.classList.add('in');io.disconnect();}});},{threshold:.4});
+      io.observe(h);
+    } else { h.classList.add('in'); }
+  })();
+
+  function toggleTheme(){
+    var d = document.documentElement.classList.toggle('dark');
+    try{ localStorage.setItem('theme', d ? 'dark' : 'light'); }catch(e){}
+    syncThemeBtn();
+  }
+  function syncThemeBtn(){
+    var b = document.getElementById('theme-toggle'); if(!b) return;
+    var d = document.documentElement.classList.contains('dark');
+    b.innerHTML = d ? '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor" stroke="none"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/></svg>' : '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M20.4 14.6A8.5 8.5 0 0 1 9.4 3.6a.6.6 0 0 0-.8-.7A9.6 9.6 0 1 0 21.1 15.4a.6.6 0 0 0-.7-.8z"/></svg>';
+    b.setAttribute('aria-label', d ? 'מעבר למצב בהיר' : 'מעבר למצב כהה');
+  }
+  syncThemeBtn();
+
   function toggleMobileMenu(){
     document.getElementById('nav-links').classList.toggle('mobile-open');
   }
@@ -1503,9 +1613,9 @@
       media: [
         { type: "video", label: "גיוס סטודנטים למשפטים – 2025", src: "videos/matzal-1.mp4", views: "גויסו 45 מתנדבים" },
         { type: "video", label: "גיוס מתנדבים – אוקטובר 2026", src: "videos/matzal-oct26.mp4" },
+        { type: "image", label: "פוסט גיוס מתנדבים", src: "images/matzal-poster.png" },
         { type: "video", label: "עדות – שקד (ראיון בזום)", src: "videos/matzal-edut-shaked.mp4", wide: true },
-        { type: "video", label: "עדות – לירית, נעזרה בפרויקט", src: "videos/matzal-edut-lirit.mp4", wide: true },
-        { type: "image", label: "פוסט גיוס מתנדבים", src: "images/matzal-poster.png" }
+        { type: "video", label: "עדות – לירית, נעזרה בפרויקט", src: "videos/matzal-edut-lirit.mp4", wide: true }
       ]
     },
     'harel': {
