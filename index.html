@@ -246,13 +246,14 @@
 
   /* Testimonials */
   .testi-outer{position:relative;max-width:760px;margin:0 auto;}
-  .testi-track{position:relative;min-height:340px;}
+  .testi-track{position:relative;height:340px;}
   .testi-card{
-    display:none;background:var(--white);border-radius:var(--radius);padding:40px 44px;
-    text-align:right;opacity:0;transition:opacity .4s ease;
-    height:340px;box-sizing:border-box;flex-direction:column;position:relative;overflow:hidden;
+    display:flex;background:var(--white);border-radius:var(--radius);padding:40px 44px;
+    text-align:right;box-sizing:border-box;flex-direction:column;position:absolute;inset:0;overflow:hidden;
+    opacity:0;visibility:hidden;transform:translateY(14px) scale(.98);
+    transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1),visibility 0s linear .7s;
   }
-  .testi-card.active{display:flex;opacity:1;}
+  .testi-card.active{opacity:1;visibility:visible;transform:none;transition-delay:0s;z-index:1;}
   .testi-card::before{
     content:'"';position:absolute;top:8px;right:28px;font-family:'Rubik';font-weight:900;
     font-size:110px;color:var(--cream);line-height:1;z-index:0;
@@ -269,8 +270,8 @@
     .testi-card{transition:none;}
   }
   @media (max-width:520px){
-    .testi-card{padding:28px 26px;height:380px;}
-    .testi-track{min-height:380px;}
+    .testi-card{padding:28px 26px;}
+    .testi-track{height:380px;}
   }
 
   .testi-arrow{
@@ -535,8 +536,6 @@
   .price-select-btn:hover{transform:scale(1.05);}
   @keyframes cartPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,107,91,.5)}70%{box-shadow:0 0 0 16px rgba(255,107,91,0)}}
   #cart-float{animation:cartPulse 2.4s infinite;}
-  @keyframes testiFade{from{opacity:0}to{opacity:1}}
-  .testi-card.active{animation:testiFade .5s ease both;}
   @media (prefers-reduced-motion:reduce){
     .blob1,.blob2,.hero-visual,#cart-float{animation:none!important;}
     .hero-inner > div:first-child > *{opacity:1;animation:none;}
@@ -1230,9 +1229,20 @@
       });
     }
 
+    function readTime(){
+      var len = (cards[index].querySelector('p') || {textContent:''}).textContent.length;
+      return Math.min(9000, Math.max(3000, 1800 + len * 45));
+    }
+    var hovering = false;
+    track.addEventListener('mouseenter', function(){ hovering = true; });
+    track.addEventListener('mouseleave', function(){ hovering = false; });
     function resetAutoplay(){
-      clearInterval(timer);
-      timer = setInterval(function(){ show(index + 1); }, 3000);
+      clearTimeout(timer);
+      timer = setTimeout(function(){
+        if(hovering){ resetAutoplay(); return; }
+        show(index + 1);
+        resetAutoplay();
+      }, readTime());
     }
 
     testiStep = function(direction){
