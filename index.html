@@ -592,6 +592,29 @@
   #project-modal .modal-media-item.has-caption .modal-video-meta{grid-column:1;}
   #project-modal .modal-caption{grid-column:2;grid-row:1/span 2;white-space:pre-line;font-size:16px;line-height:1.75;color:var(--ink);background:var(--cream);border-radius:18px;padding:22px 26px;}
   @media (max-width:700px){#project-modal .modal-media-item.has-caption{grid-template-columns:1fr}#project-modal .modal-caption{grid-column:1;grid-row:auto}}
+  @keyframes cardFlip{0%{transform:perspective(900px) rotateY(0) scale(1)}45%{transform:perspective(900px) rotateY(90deg) scale(1.05)}55%{transform:perspective(900px) rotateY(90deg) scale(1.05)}100%{transform:perspective(900px) rotateY(0) scale(1)}}
+  .portfolio-item.flipping{animation:cardFlip .6s ease-in-out;}
+
+  /* Decorative circles per section */
+  #about,#work,#pricing,#testimonials,#contact{position:relative;overflow:hidden;isolation:isolate;}
+  #about > .wrap,#work > .wrap,#pricing > .wrap,#testimonials > .wrap,#contact > .wrap,#contact > .contact{position:relative;z-index:1;}
+  #about::before,#work::before,#pricing::before,#testimonials::before,#contact::before,
+  #about::after,#work::after,#pricing::after,#testimonials::after,#contact::after{content:"";position:absolute;border-radius:50%;z-index:-1;pointer-events:none;}
+  #about::before{width:240px;height:240px;background:var(--teal);opacity:.5;top:18%;right:-120px;animation:bobA 9s ease-in-out infinite;}
+  #about::after{width:90px;height:90px;background:var(--coral);opacity:.55;top:70%;left:-45px;animation:bobB 9s ease-in-out infinite;}
+  #work::before{width:130px;height:130px;background:var(--yellow);opacity:.9;top:14%;left:-65px;animation:bobB 9s ease-in-out infinite;}
+  #work::after{width:250px;height:250px;background:var(--teal);opacity:.5;top:72%;right:-125px;animation:bobA 9s ease-in-out infinite;}
+  #pricing::before{width:100px;height:100px;background:var(--coral);opacity:.55;top:12%;left:-50px;animation:bobA 9s ease-in-out infinite;}
+  #pricing::after{width:210px;height:210px;background:var(--yellow);opacity:.9;top:75%;right:-105px;animation:bobB 9s ease-in-out infinite;}
+  #testimonials::before{width:200px;height:200px;background:var(--teal);opacity:.5;top:14%;left:-100px;animation:bobB 9s ease-in-out infinite;}
+  #testimonials::after{width:110px;height:110px;background:var(--coral);opacity:.55;top:68%;right:-55px;animation:bobA 9s ease-in-out infinite;}
+  #contact::before{width:260px;height:260px;background:var(--yellow);opacity:.9;top:16%;right:-130px;animation:bobA 9s ease-in-out infinite;}
+  #contact::after{width:120px;height:120px;background:var(--teal);opacity:.5;top:68%;left:-60px;animation:bobB 9s ease-in-out infinite;}
+  @keyframes bobA{0%,100%{transform:translate(0,-18px)}50%{transform:translate(0,18px)}}
+  @keyframes bobB{0%,100%{transform:translate(0,16px)}50%{transform:translate(0,-16px)}}
+  @keyframes gentleA{0%,100%{transform:translate(0,0)}50%{transform:translate(10px,14px)}}
+  @keyframes gentleB{0%,100%{transform:translate(0,0)}50%{transform:translate(-10px,-14px)}}
+  @media (max-width:700px){#about::before{width:120px!important;height:120px!important;right:-60px!important}#about::after{width:45px!important;height:45px!important;left:-22px!important}#work::before{width:65px!important;height:65px!important;left:-32px!important}#work::after{width:125px!important;height:125px!important;right:-62px!important}#pricing::before{width:50px!important;height:50px!important;left:-25px!important}#pricing::after{width:105px!important;height:105px!important;right:-52px!important}#testimonials::before{width:100px!important;height:100px!important;left:-50px!important}#testimonials::after{width:55px!important;height:55px!important;right:-27px!important}#contact::before{width:130px!important;height:130px!important;right:-65px!important}#contact::after{width:60px!important;height:60px!important;left:-30px!important}}
 </style>
 </head>
 <body>
@@ -1526,6 +1549,12 @@
     }
   };
 
+  function flipOpen(item){
+    if(window.matchMedia('(prefers-reduced-motion:reduce)').matches){ openProject(item); return; }
+    item.classList.add('flipping');
+    setTimeout(function(){ openProject(item); }, 260);
+    setTimeout(function(){ item.classList.remove('flipping'); }, 700);
+  }
   function openProject(item){
     const key = item.dataset.project;
     modalVideosMulti.innerHTML = '';
@@ -1618,9 +1647,9 @@
   }
 
   document.querySelectorAll('.portfolio-item').forEach(function(item){
-    item.addEventListener('click', function(){ openProject(item); });
+    item.addEventListener('click', function(){ flipOpen(item); });
     item.addEventListener('keydown', function(e){
-      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openProject(item); }
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); flipOpen(item); }
     });
   });
 
