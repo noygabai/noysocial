@@ -640,6 +640,13 @@
   .modal-backdrop.open .modal-box{animation:popIn .4s cubic-bezier(.2,.9,.3,1) both;}
   .lightbox.open .lb-stage{animation:popIn .35s cubic-bezier(.2,.9,.3,1) both;}
   @media (prefers-reduced-motion:reduce){.modal-backdrop.open,.modal-backdrop.open .modal-box,.lightbox.open .lb-stage{animation:none}}
+  #project-modal .modal-videos{align-items:start;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));}
+  #project-modal .modal-media-item{min-width:0;}
+  #project-modal .modal-media-item:not(.wide) video,#project-modal .modal-media-item:not(.wide) img{aspect-ratio:3/4;height:auto;object-fit:cover;width:100%;}
+  #project-modal .modal-media-item.wide video{aspect-ratio:16/9;width:100%;max-width:none;}
+  #project-modal .modal-video-meta{display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:space-between;margin-top:10px;min-width:0;}
+  #project-modal .modal-video-label,#project-modal .modal-video-stat{overflow-wrap:anywhere;}
+  #project-modal .modal-media-item.zoomable:hover video,#project-modal .modal-media-item.zoomable:hover img{transform:none;}
 </style>
 </head>
 <body>
