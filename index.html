@@ -142,6 +142,7 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
 
   /* Portfolio grid - instagram style */
   .portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .portfolio-grid .portfolio-item:last-child:nth-child(3n+1){grid-column:2;}
   .portfolio-item{
     aspect-ratio:1/1;border-radius:16px;position:relative;overflow:hidden;cursor:pointer;
     transition:transform .3s ease, box-shadow .3s ease;
@@ -221,6 +222,7 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
   .addon-text{flex:1;}
   .addon-text b{display:block;font-size:15px;margin-bottom:2px;}
   .addon-text span{font-size:13px;color:var(--muted);}
+  .addon-price{display:inline-block;margin-top:2px;font-size:14px;font-weight:800;color:var(--coral);}
   .addon-card .price-select-btn.small{padding:9px 18px;font-size:13px;white-space:nowrap;}
 
   .pricing-cta-row{display:flex;justify-content:center;margin-bottom:20px;}
@@ -534,6 +536,7 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
     .service-card h3{font-size:17px;margin-bottom:6px;}
     .service-card p{font-size:14px;}
     .services-grid,.portfolio-grid{grid-template-columns:1fr 1fr;}
+    .portfolio-grid .portfolio-item:last-child:nth-child(3n+1){grid-column:auto;}
     .contact-wrap{grid-template-columns:1fr;}
     .contact{padding:40px 24px;margin:0 12px;}
   }
@@ -1101,17 +1104,17 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
       <div class="addons-row">
         <div class="addon-card">
           <span class="addon-icon">🎬</span>
-          <div class="addon-text"><b>עריכת סרטון בנפרד</b><span>החל מ-100 ₪ לסרטון</span></div>
-          <button type="button" class="price-select-btn small" onclick="togglePricingItem(this,'עריכת סרטון בנפרד',100)">הוספה</button>
+          <div class="addon-text"><b>עריכת סרטון</b><span>קאטים וכתוביות<br><strong class="addon-price">החל מ-100 ₪</strong></span></div>
+          <button type="button" class="price-select-btn small" onclick="togglePricingItem(this,'עריכת סרטון',100)">הוספה</button>
         </div>
         <div class="addon-card">
           <span class="addon-icon">🎥</span>
-          <div class="addon-text"><b>סרטון UGC</b><span>400 ₪ לסרטון</span></div>
+          <div class="addon-text"><b>סרטון UGC</b><span>צילום, עריכה וכתוביות<br><strong class="addon-price">400 ₪ לסרטון</strong></span></div>
           <button type="button" class="price-select-btn small" onclick="togglePricingItem(this,'סרטון UGC',400)">הוספה</button>
         </div>
         <div class="addon-card">
           <span class="addon-icon">🖥️</span>
-          <div class="addon-text"><b>דף נחיתה</b><span>1,500 ₪ להקמה</span></div>
+          <div class="addon-text"><b>דף נחיתה</b><span>עיצוב, כתיבה ובנייה<br><strong class="addon-price">1,500 ₪ להקמה</strong></span></div>
           <button type="button" class="price-select-btn small" onclick="togglePricingItem(this,'דף נחיתה',1500)">הוספה</button>
         </div>
       </div>
