@@ -592,6 +592,10 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
   .price-card:hover{transform:translateY(-10px) rotate(-.6deg);box-shadow:0 22px 40px rgba(0,0,0,.16);}
   .portfolio-item{will-change:transform;}
   .portfolio-item .fill{transition:transform .7s cubic-bezier(.2,.8,.2,1);}
+  @media (hover:hover){
+    .portfolio-item .fill{filter:brightness(.6);transition:transform .7s cubic-bezier(.2,.8,.2,1), filter .5s ease;}
+    .portfolio-item:hover .fill,.portfolio-item:focus-visible .fill{filter:none;}
+  }
   @media (prefers-reduced-motion:reduce){}
 
   /* Loader circles */
