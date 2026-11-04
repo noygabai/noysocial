@@ -468,6 +468,11 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
   html.a11y-no-motion .section::before,html.a11y-no-motion .section::after{animation:none !important;}
 
   /* Project modal */
+  .modal-nav{position:absolute;top:15px;left:60px;display:flex;gap:8px;direction:ltr;z-index:3;}
+  .modal-nav-btn{width:38px;height:38px;border-radius:50%;border:0;background:rgba(128,128,128,.18);color:var(--ink);font-size:24px;line-height:1;cursor:pointer;unicode-bidi:isolate;}
+  .modal-nav-btn:hover{background:var(--yellow);color:#1B1B2F;}
+  .modal-nav-btn:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+  .modal-nav.single{display:none;}
   .modal-backdrop{
     display:none;position:fixed;inset:0;background:rgba(27,27,47,.7);
     align-items:center;justify-content:center;z-index:200;padding:24px;
@@ -1020,6 +1025,10 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
   <div class="modal-backdrop" id="project-modal" onclick="if(event.target===this) closeProject()">
     <div class="modal-box">
       <button class="modal-close" onclick="closeProject()" aria-label="סגירה">✕</button>
+      <div class="modal-nav">
+        <button type="button" class="modal-nav-btn" onclick="projectStep(1)" aria-label="הפרויקט הבא">‹</button>
+        <button type="button" class="modal-nav-btn" onclick="projectStep(-1)" aria-label="הפרויקט הקודם">›</button>
+      </div>
       <div class="modal-video-wrap" id="modal-video-wrap">
         <video id="modal-video" controls playsinline></video>
         <div id="modal-video-fallback" class="modal-video-fallback">
@@ -1574,14 +1583,19 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
   const INFO_PAGES = {
     accessibility: {
       title: "הצהרת נגישות",
-      body: "אני, נוי גבאי, רואה חשיבות במתן שירות שוויוני ונגיש לכלל הגולשים, ובהם אנשים עם מוגבלות, ופועלת כדי שיוכלו לצפות בתיק העבודות, לקרוא את התכנים וליצור קשר באופן עצמאי, נוח ומכבד.\n# תקן ורמת הנגישות\nהאתר משמש כתיק עבודות דיגיטלי ואינו כולל קבלת קהל פיזית, ולכן ההתאמות הן דיגיטליות. האתר הותאם מתוך שאיפה לעמוד בתקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), בהתאם לתקן הישראלי ת\"י 5568 חלק 1 ברמה AA, המבוסס על הנחיות WCAG 2.0.\nהנגשה היא תהליך מתמשך. אני בודקת את האתר כשמוסיפים בו תוכן חדש, ומתקנת קושי שמובא לידיעתי.\n# התאמות נגישות באתר\n• ניווט מקלדת: אפשר לנווט באתר באמצעות מקלדת בלבד (Tab, Enter וחיצים), כולל בכרטיסי הפרויקטים ובחלונות הנפתחים.\n• סימון מיקוד: רכיב שנבחר במקלדת מסומן בבירור.\n• שמות נגישים: לכפתורים, לחלונות ולחיצי הניווט יש תוויות מתאימות.\n• מבנה סמנטי: כותרת ראשית, כותרות משנה ורכיבי HTML סטנדרטיים, כדי להקל על שימוש בקורא מסך.\n• טקסט חלופי: לתמונות משמעותיות בתיק העבודות נוסף טקסט חלופי.\n• ניגודיות: צבעי הטקסט והרקע נבחרו לקריאות, והאתר מתאים את עצמו למצב כהה או בהיר לפי הגדרת המכשיר.\n• התאמה למסכים: תצוגה לדסקטופ ולמובייל ותמיכה בהגדלת טקסט בדפדפן.\n• הפחתת תנועה: אין אלמנטים מהבהבים, ואפשר לעצור אנימציות וסרטונים.\n# סרגל הנגישות\nבצד האתר מופיע כפתור נגישות (♿) הפותח סרגל עם האפשרויות הבאות:\n• הגדלה והקטנה של טקסט\n• ניגודיות גבוהה: רקע שחור, טקסט לבן והדגשות בצהוב\n• ניגודיות הפוכה: היפוך צבעי המסך\n• שחור לבן: תצוגה ללא צבעים\n• הדגשת קישורים\n• גופן קריא\n• עצירת אנימציות וסרטונים\n• איפוס כל ההגדרות\nהסרגל הוא כלי עזר נוסף, ואפשר להגיע אליו ולהפעיל אותו גם במקלדת.\n# מגבלות ידועות\n• חלק מהסרטונים והתכנים המוטמעים (למשל מאינסטגרם) עשויים להיות ללא כתוביות מלאות או תיאור קולי. אפשר לפנות אליי ולקבל את המידע המהותי בטקסט.\n• לא בוצעה בדיקה מלאה בכל תוכנת קורא מסך, ולכן ייתכן שחלק מהרכיבים עדיין אינם נגישים במלואם.\n# פנייה בנושא נגישות\nאם נתקלתם בקושי, מצאתם רכיב שאינו פועל כראוי, או שאתם זקוקים למידע בפורמט נגיש אחר, אשמח שתפנו אליי ואטפל בכך בהקדם:\n• שם: נוי גבאי (רכזת הנגישות של האתר)\n• דוא\"ל: nogabai5@gmail.com\n• טלפון ווואטסאפ: 052-7317927\nכדי לטפל ביעילות, כדאי לציין את הפעולה שניסיתם לבצע, את תיאור הקושי, את סוג הדפדפן והמכשיר, ואם אתם משתמשים בטכנולוגיה מסייעת.\n# עדכון ההצהרה\nההצהרה עודכנה לאחרונה ב-4.11.2026."
+      body: "אני, נוי גבאי, רואה חשיבות במתן שירות שוויוני ונגיש לכלל הגולשים, ובהם אנשים עם מוגבלות, ופועלת כדי שיוכלו לצפות בתיק העבודות, לקרוא את התכנים וליצור קשר באופן עצמאי, נוח ומכבד.\n# תקן ורמת הנגישות\nהאתר הותאם מתוך שאיפה לעמוד בתקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), בהתאם לתקן הישראלי ת\"י 5568 חלק 1 ברמה AA, המבוסס על הנחיות WCAG 2.0.\nהנגשה היא תהליך מתמשך. אני בודקת את האתר כשמוסיפים בו תוכן חדש, ומתקנת קושי שמובא לידיעתי.\n# התאמות נגישות באתר\n• ניווט מקלדת: אפשר לנווט באתר באמצעות מקלדת בלבד (Tab, Enter וחיצים): חיצים עוברים בין כרטיסי הפרויקטים, ובתוך פרויקט פתוח מעבירים לפרויקט הקודם או הבא. Esc סוגר חלונות.\n• סימון מיקוד: רכיב שנבחר במקלדת מסומן בבירור.\n• שמות נגישים: לכפתורים, לחלונות ולחיצי הניווט יש תוויות מתאימות.\n• מבנה סמנטי: כותרת ראשית, כותרות משנה ורכיבי HTML סטנדרטיים, כדי להקל על שימוש בקורא מסך.\n• טקסט חלופי: לתמונות משמעותיות בתיק העבודות נוסף טקסט חלופי.\n• ניגודיות: צבעי הטקסט והרקע נבחרו לקריאות, והאתר מתאים את עצמו למצב כהה או בהיר לפי הגדרת המכשיר.\n• התאמה למסכים: תצוגה לדסקטופ ולמובייל ותמיכה בהגדלת טקסט בדפדפן.\n• הפחתת תנועה: אין אלמנטים מהבהבים, ואפשר לעצור אנימציות וסרטונים.\n# סרגל הנגישות\nבצד האתר מופיע כפתור נגישות (♿) הפותח סרגל עם האפשרויות הבאות:\n• הגדלה והקטנה של טקסט\n• ניגודיות גבוהה: רקע שחור, טקסט לבן והדגשות בצהוב\n• ניגודיות הפוכה: היפוך צבעי המסך\n• שחור לבן: תצוגה ללא צבעים\n• הדגשת קישורים\n• גופן קריא\n• עצירת אנימציות וסרטונים\n• איפוס כל ההגדרות\nהסרגל הוא כלי עזר נוסף, ואפשר להגיע אליו ולהפעיל אותו גם במקלדת.\n# מגבלות ידועות\n• חלק מהסרטונים והתכנים המוטמעים (למשל מאינסטגרם) עשויים להיות ללא כתוביות מלאות או תיאור קולי. אפשר לפנות אליי ולקבל את המידע המהותי בטקסט.\n• לא בוצעה בדיקה מלאה בכל תוכנת קורא מסך, ולכן ייתכן שחלק מהרכיבים עדיין אינם נגישים במלואם.\n# פנייה בנושא נגישות\nאם נתקלתם בקושי, מצאתם רכיב שאינו פועל כראוי, או שאתם זקוקים למידע בפורמט נגיש אחר, אשמח שתפנו אליי ואטפל בכך בהקדם:\n• שם: נוי גבאי (רכזת הנגישות של האתר)\n• דוא\"ל: nogabai5@gmail.com\n• טלפון ווואטסאפ: 052-7317927\nכדי לטפל ביעילות, כדאי לציין את הפעולה שניסיתם לבצע, את תיאור הקושי, את סוג הדפדפן והמכשיר, ואם אתם משתמשים בטכנולוגיה מסייעת.\n# עדכון ההצהרה\nההצהרה עודכנה לאחרונה ב-4.11.2026."
     },
     privacy: {
       title: "הצהרת פרטיות",
-      body: "האתר הזה הוא תיק עבודות. הוא לא אוסף עליכם מידע, ואין בו טפסים, הרשמה לניוזלטר או חשבונות משתמשים.\n\n• מה האתר שומר: רק את הבחירה שלכם במצב כהה או בהיר, בדפדפן שלכם בלבד. זה לא נשלח אליי.\n\n• עוגיות ומעקב: האתר לא מציב עוגיות ולא משתמש בכלי אנליטיקס או פרסום.\n\n• שירותים חיצוניים: האתר טוען גופנים מ-Google Fonts, ולכן כתובת ה-IP שלכם עשויה להישלח לגוגל לצורך טעינת הגופנים. גם שירות האחסון של האתר עשוי לתעד נתוני גלישה טכניים, כמו כתובת IP, לצורכי אבטחה ותפעול.\n\n• יצירת קשר: אם תיצרו איתי קשר בוואטסאפ, במייל, בטלפון או באינסטגרם, ההודעה שלכם נשמרת באפליקציה שדרכה שלחתם, ולא באתר. אני משתמשת בה רק כדי לענות לכם.\n\n• שאלות או בקשות: אם יש לכם שאלה על פרטיות, או שאתם רוצים שאמחק פנייה ששלחתם לי, אפשר לכתוב לי: nogabai5@gmail.com\n\nאם בעתיד אוסיף לאתר אנליטיקס, טופס או ניוזלטר, אעדכן את העמוד הזה קודם.\n\nעדכון אחרון: 4.11.2026"
+      body: "האתר הזה הוא תיק עבודות. הוא לא אוסף עליכם מידע, ואין בו טפסים, הרשמה לניוזלטר או חשבונות משתמשים.\n# מה האתר שומר\nהאתר שומר רק את הבחירה שלכם במצב כהה או בהיר, בדפדפן שלכם בלבד. המידע הזה לא נשלח אליי.\n# עוגיות ומעקב\nהאתר לא מציב עוגיות ולא משתמש בכלי אנליטיקס או פרסום.\n# שירותים חיצוניים\n• גופנים: האתר טוען גופנים מ-Google Fonts, ולכן כתובת ה-IP שלכם עשויה להישלח לגוגל לצורך טעינת הגופנים.\n• אחסון: שירות האחסון של האתר עשוי לתעד נתוני גלישה טכניים, כמו כתובת IP, לצורכי אבטחה ותפעול.\n# יצירת קשר\nאם תיצרו איתי קשר בוואטסאפ, במייל, בטלפון או באינסטגרם, ההודעה שלכם נשמרת באפליקציה שדרכה שלחתם, ולא באתר. אני משתמשת בה רק כדי לענות לכם.\n# שאלות ובקשות\nאם יש לכם שאלה על פרטיות, או שאתם רוצים שאמחק פנייה ששלחתם לי, אפשר לכתוב לי:\n• דוא\"ל: nogabai5@gmail.com\n• טלפון ווואטסאפ: 052-7317927\n# עדכוני ההצהרה\nאם בעתיד אוסיף לאתר אנליטיקס, טופס או ניוזלטר, אעדכן את העמוד הזה קודם.\nההצהרה עודכנה לאחרונה ב-4.11.2026."
     }
   };
 
+  function a11yFocusBox(m){
+    var box = m.querySelector('.modal-box'); if(!box) return;
+    box.setAttribute('tabindex','-1'); box.style.outline = 'none';
+    try{ box.focus({preventScroll:true}); }catch(e){ box.focus(); }
+  }
   function renderInfoBody(box, text){
     box.textContent = '';
     let list = null;
@@ -1606,6 +1620,7 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
     document.getElementById('info-modal-title').textContent = page.title;
     renderInfoBody(document.getElementById('info-modal-body'), page.body);
     infoModal.classList.add('open');
+    a11yFocusBox(infoModal);
     document.body.style.overflow = 'hidden';
   }
   function closeInfoModal(){
@@ -1859,7 +1874,19 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
   };
 
   function flipOpen(item){ openProject(item); }
+  var currentProjectItem = null;
+  function projectList(){
+    var panel = currentProjectItem && currentProjectItem.closest('.tab-panel');
+    return Array.prototype.filter.call((panel || document).querySelectorAll('.portfolio-item[data-project]'), function(e){ return e.offsetParent !== null || e === currentProjectItem; });
+  }
+  function projectStep(d){
+    var list = projectList(); if(list.length < 2) return;
+    var i = list.indexOf(currentProjectItem);
+    openProject(list[(i + d + list.length) % list.length]);
+  }
   function openProject(item){
+    currentProjectItem = item;
+    var nav = modal.querySelector('.modal-nav'); if(nav) nav.classList.toggle('single', projectList().length < 2);
     const key = item.dataset.project;
     modalVideosMulti.innerHTML = '';
     modalIgLink.style.display = 'none';
@@ -1956,6 +1983,7 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
     modal.querySelector('.modal-box').scrollTop = 0;
+    a11yFocusBox(modal);
     if(key && PROJECTS[key] && location.hash !== '#project-' + key){
       try{ history.pushState({project:key}, '', '#project-' + key); }catch(e){}
     }
@@ -1993,11 +2021,28 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
     document.getElementById('lb-stage').innerHTML = '';
   }
   document.addEventListener('keydown', function(e){
+    if(!modal.classList.contains('open') || document.getElementById('lightbox').classList.contains('open')) return;
+    var t = e.target && e.target.tagName;
+    if(t === 'VIDEO' || t === 'INPUT' || t === 'TEXTAREA') return;
+    if(e.key === 'ArrowLeft'){ e.preventDefault(); projectStep(1); }
+    else if(e.key === 'ArrowRight'){ e.preventDefault(); projectStep(-1); }
+  });
+  document.addEventListener('keydown', function(e){
     if(!document.getElementById('lightbox').classList.contains('open')) return;
     if(e.key === 'Escape'){ closeLightbox(); e.stopPropagation(); }
-    else if(e.key === 'ArrowLeft'){ lightboxStep(1); }
-    else if(e.key === 'ArrowRight'){ lightboxStep(-1); }
+    else if(e.key === 'ArrowLeft'){ e.preventDefault(); lightboxStep(1); }
+    else if(e.key === 'ArrowRight'){ e.preventDefault(); lightboxStep(-1); }
   }, true);
+
+  document.addEventListener('keydown', function(e){
+    var c = document.activeElement;
+    if(!c || !c.classList || !c.classList.contains('portfolio-item')) return;
+    if(e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+    var list = Array.prototype.slice.call(c.parentNode.querySelectorAll('.portfolio-item'));
+    var i = list.indexOf(c), cols = getComputedStyle(c.parentNode).gridTemplateColumns.split(' ').length;
+    var n = e.key === 'ArrowLeft' ? i + 1 : e.key === 'ArrowRight' ? i - 1 : e.key === 'ArrowDown' ? i + cols : i - cols;
+    if(n >= 0 && n < list.length){ e.preventDefault(); list[n].focus(); }
+  });
 
   function closeProject(){
     if(location.hash.indexOf('#project-') === 0){ try{ history.back(); return; }catch(e){} }
