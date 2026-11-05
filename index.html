@@ -702,6 +702,7 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
   #project-modal .modal-media-item{min-width:0;}
   #project-modal .modal-media-item:not(.wide) video,#project-modal .modal-media-item:not(.wide) img{aspect-ratio:3/4;height:auto;object-fit:cover;width:100%;}
   #project-modal .modal-media-item.wide video{aspect-ratio:16/9;width:100%;max-width:none;}
+  #project-modal .modal-media-item.wide img{aspect-ratio:16/9;width:100%;max-width:640px;margin:0 auto;object-fit:cover;display:block;}
   #project-modal .modal-video-meta{display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:space-between;margin-top:10px;min-width:0;}
   #project-modal .modal-video-label,#project-modal .modal-video-stat{overflow-wrap:anywhere;}
   #project-modal .modal-media-item.zoomable:hover video,#project-modal .modal-media-item.zoomable:hover img{transform:none;}
@@ -1655,21 +1656,21 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
   /* פרויקטים עם כמה קבצי מדיה תחת אותה כרטיסייה - הוסיפי כאן פרויקטים נוספים באותה מבנה */
   const PROJECTS = {
     'adam-basport': {
-      services: ["עיצוב פוסט הרשמה", "עיצוב שמשוניות ופלאיירים", "קריאייטיב לסרטונים", "עריכת וידאו", "קמפיין הרשמה"],
+      services: ["עיצוב פוסט הרשמה", "עיצוב שמשוניות", "קריאייטיב לסרטונים", "עריכת וידאו", "קמפיין הרשמה"],
       result: "קמפיין הרשמה מסודר, עם עיצוב וסרטונים בשפה אחידה.",
       problem: "הסטודיו רצה למלא את ההרשמה לעונת 2025-2026 ולהסביר להורים מדוע ספורט מגע חשוב לילדים.",
-      help: "עיצוב פוסט ההרשמה לעונת 2025-2026, שמשוניות ופלאיירים, לצד הפקת סרטוני תוכן סביב המסרים המרכזיים של הסטודיו: ספורט מגע, אומץ, ביטחון עצמי. הקריאייטיב והעריכה נבנו כך שהעיצוב והסרטונים מדברים בשפה אחת.",
+      help: "עיצוב פוסט ההרשמה לעונת 2025-2026, שמשוניות, לצד הפקת סרטוני תוכן סביב המסרים המרכזיים של הסטודיו: ספורט מגע, אומץ, ביטחון עצמי. הקריאייטיב והעריכה נבנו כך שהעיצוב והסרטונים מדברים בשפה אחת.",
       tag: "ליווי דיגיטלי",
       title: "אדם בספורט - סטודיו ג'ודו",
       desc: "ליוויתי את סטודיו הג'ודו של אדם בספורט בקמפיין הרשמה לעונת 2025-2026: עיצוב פוסט ההרשמה, ובניית סרטוני תוכן סביב המסרים המרכזיים של הסטודיו - ספורט מגע, אומץ וביטחון עצמי לילדים.",
       instagram: "https://www.instagram.com/adambasport/",
       media: [
         { type: "image", label: "פוסט ההרשמה", src: "images/adam-basport.jpg" },
-        { type: "image", label: "שמשונית", src: "images/adam-basport-shamshonit.jpg" },
-        { type: "image", label: "פלאייר", src: "images/adam-basport-flyer.jpg" },
-        { type: "image", label: "שלט בשטח", src: "images/adam-basport-street.jpg" },
         { type: "video", label: "הילדים שלנו צריכים את זה", src: "videos/adam-basport-1.mp4", views: "28.7K צפיות" },
-        { type: "video", label: "אומץ וביטחון עצמי", src: "videos/adam-basport-2.mp4", views: "9,037 צפיות" }
+        { type: "video", label: "אומץ וביטחון עצמי", src: "videos/adam-basport-2.mp4", views: "9,037 צפיות" },
+        { type: "image", label: "שמשוניות · לחצו לדפדוף", src: "images/adam-basport-mockup.jpg", wide: true },
+        { type: "image", label: "שמשונית", src: "images/adam-basport-flyer.jpg", hidden: true },
+        { type: "image", label: "שמשונית", src: "images/adam-basport-shamshonit.jpg", hidden: true }
       ]
     },
     'matok-beshchuna': {
@@ -1919,6 +1920,7 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
 
       currentMedia = p.media.filter(function(m){ return m.type !== 'instagram'; });
       p.media.forEach(function(m){
+        if(m.hidden) return;
         const block = document.createElement('div');
         block.className = 'modal-media-item' + (m.wide ? ' wide' : '') + (m.caption ? ' has-caption' : '');
         let el;
