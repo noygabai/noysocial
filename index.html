@@ -676,6 +676,7 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
   .modal-media-item.zoomable{position:relative;cursor:zoom-in;}
   .modal-media-item.zoomable video,.modal-media-item.zoomable img{transition:transform .3s ease,box-shadow .3s ease;}
   .modal-media-item.zoomable:hover video,.modal-media-item.zoomable:hover img{transform:scale(1.02);box-shadow:0 12px 30px rgba(0,0,0,.2);}
+  .play-badge::before{content:'';display:block;width:0;height:0;border-style:solid;border-width:11px 0 11px 18px;border-color:transparent transparent transparent var(--ink);margin-left:5px;}
   .play-badge{position:absolute;top:calc(50% - 30px);left:50%;transform:translate(-50%,-50%);width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.9);color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:22px;padding-left:4px;pointer-events:none;box-shadow:0 6px 18px rgba(0,0,0,.3);}
   .lightbox{display:none;position:fixed;inset:0;z-index:400;background:rgba(15,15,28,.94);align-items:center;justify-content:center;gap:16px;padding:64px 16px 56px;}
   .lightbox.open{display:flex;}
@@ -1943,7 +1944,7 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
           block.appendChild(el);
           const pb = document.createElement('span');
           pb.className = 'play-badge';
-          pb.textContent = '\u25B6';
+          pb.textContent = '';
           block.appendChild(pb);
           block.classList.add('zoomable');
           block.addEventListener('click', function(){ openLightbox(currentMedia.indexOf(m)); });
