@@ -1905,6 +1905,7 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
     openProject(list[(i + d + list.length) % list.length]);
   }
   function openProject(item){
+    var wasOpen = modal.classList.contains('open');
     currentProjectItem = item;
     var nav = modal.querySelector('.modal-nav'); if(nav) nav.classList.toggle('single', projectList().length < 2);
     const key = item.dataset.project;
@@ -2019,7 +2020,7 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
     modal.querySelector('.modal-box').scrollTop = 0;
     a11yFocusBox(modal);
     if(key && PROJECTS[key] && location.hash !== '#project-' + key){
-      try{ history.pushState({project:key}, '', '#project-' + key); }catch(e){}
+      try{ if(wasOpen && location.hash.indexOf('#project-') === 0){ history.replaceState({project:key}, '', '#project-' + key); } else { history.pushState({project:key}, '', '#project-' + key); } }catch(e){}
     }
   }
 
