@@ -630,6 +630,11 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
   #project-modal .modal-videos{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:22px;margin-top:28px;align-items:start;}
   #project-modal .modal-media-item video,#project-modal .modal-media-item img{max-width:none;width:100%;border-radius:18px;}
   #project-modal .modal-video-meta{max-width:none;}
+  #project-modal .modal-bar{position:sticky;top:16px;height:0;z-index:6;margin:-28px -48px 0;}
+  #project-modal .modal-bar .modal-close{top:0;left:16px;box-shadow:0 2px 10px rgba(0,0,0,.2);}
+  #project-modal .modal-bar .modal-nav{top:-1px;left:60px;}
+  #project-modal .modal-bar .modal-nav-btn{box-shadow:0 2px 10px rgba(0,0,0,.15);background:var(--cream);}
+  @media (max-width:700px){#project-modal .modal-bar{margin:-40px -22px 0;}}
   @media (max-width:700px){
     #project-modal .modal-box{padding:56px 22px 28px;}
     #project-modal .modal-box h3{font-size:26px;}
@@ -676,6 +681,11 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
   .modal-media-item.zoomable{position:relative;cursor:zoom-in;}
   .modal-media-item.zoomable video,.modal-media-item.zoomable img{transition:transform .3s ease,box-shadow .3s ease;}
   .modal-media-item.zoomable:hover video,.modal-media-item.zoomable:hover img{transform:scale(1.02);box-shadow:0 12px 30px rgba(0,0,0,.2);}
+  .tile-stage{position:relative;}
+  .tile-arrow{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.95);color:#1B1B2F;font-size:26px;line-height:1;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.25);direction:ltr;unicode-bidi:isolate;z-index:2;}
+  .tile-arrow:hover{background:var(--yellow);}
+  .tile-prev{right:12px;} .tile-next{left:12px;}
+  .tile-count{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(27,27,47,.75);color:#fff;font-size:13px;font-weight:700;padding:3px 12px;border-radius:100px;direction:ltr;z-index:2;pointer-events:none;}
   .play-badge::before{content:'';display:block;width:0;height:0;border-style:solid;border-width:11px 0 11px 18px;border-color:transparent transparent transparent var(--ink);margin-left:5px;}
   .play-badge{position:absolute;top:calc(50% - 30px);left:50%;transform:translate(-50%,-50%);width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.9);color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:22px;padding-left:4px;pointer-events:none;box-shadow:0 6px 18px rgba(0,0,0,.3);}
   .lightbox{display:none;position:fixed;inset:0;z-index:400;background:rgba(15,15,28,.94);align-items:center;justify-content:center;gap:16px;padding:64px 16px 56px;}
@@ -1030,10 +1040,12 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
 
   <div class="modal-backdrop" id="project-modal" onclick="if(event.target===this) closeProject()">
     <div class="modal-box">
+<div class="modal-bar">
       <button class="modal-close" onclick="closeProject()" aria-label="סגירה">✕</button>
       <div class="modal-nav">
         <button type="button" class="modal-nav-btn" onclick="projectStep(1)" aria-label="הפרויקט הבא">‹</button>
         <button type="button" class="modal-nav-btn" onclick="projectStep(-1)" aria-label="הפרויקט הקודם">›</button>
+      </div>
       </div>
       <div class="modal-video-wrap" id="modal-video-wrap">
         <video id="modal-video" controls playsinline></video>
@@ -1669,9 +1681,8 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
         { type: "image", label: "פוסט ההרשמה", src: "images/adam-basport.jpg" },
         { type: "video", label: "הילדים שלנו צריכים את זה", src: "videos/adam-basport-1.mp4", views: "28.7K צפיות" },
         { type: "video", label: "אומץ וביטחון עצמי", src: "videos/adam-basport-2.mp4", views: "9,037 צפיות" },
-        { type: "image", label: "שמשוניות · לחצו לדפדוף", src: "images/adam-basport-mockup.jpg", wide: true },
-        { type: "image", label: "שמשונית", src: "images/adam-basport-flyer.jpg", hidden: true },
-        { type: "image", label: "שמשונית", src: "images/adam-basport-shamshonit.jpg", hidden: true }
+        { type: "image", label: "שמשוניות", src: "images/adam-basport-mockup.jpg", thumb: "images/adam-basport-mockup.jpg", full: "images/adam-basport-flyer.jpg", group: "sham", lbLabel: "שמשונית", wide: true },
+        { type: "image", label: "שמשונית", src: "images/adam-basport-shamshonit.jpg", thumb: "images/adam-basport-mockup2.jpg", group: "sham", hidden: true },
       ]
     },
     'matok-beshchuna': {
@@ -1931,7 +1942,20 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
           el.alt = m.label || '';
           block.appendChild(el);
           block.classList.add('zoomable');
-          block.addEventListener('click', function(){ openLightbox(currentMedia.indexOf(m)); });
+          var grp = m.group ? p.media.filter(function(x){ return x.group === m.group; }) : null;
+          var cur = 0;
+          if(grp && grp.length > 1){
+            var stage = document.createElement('div'); stage.className = 'tile-stage';
+            block.removeChild(el); stage.appendChild(el); block.appendChild(stage);
+            var cnt = document.createElement('span'); cnt.className = 'tile-count'; cnt.textContent = '1 / ' + grp.length; stage.appendChild(cnt);
+            var mk = function(cls, txt, lab, d){
+              var b = document.createElement('button'); b.type = 'button'; b.className = 'tile-arrow ' + cls; b.textContent = txt; b.setAttribute('aria-label', lab);
+              b.addEventListener('click', function(ev){ ev.stopPropagation(); cur = (cur + d + grp.length) % grp.length; el.src = grp[cur].thumb || grp[cur].src; cnt.textContent = (cur + 1) + ' / ' + grp.length; });
+              stage.appendChild(b);
+            };
+            mk('tile-prev', '\u203A', 'הקודם', -1); mk('tile-next', '\u2039', 'הבא', 1);
+          }
+          block.addEventListener('click', function(){ openLightbox(currentMedia.indexOf(grp ? grp[cur] : m)); });
         } else if(m.type === 'instagram'){
           block.innerHTML = '<blockquote class="instagram-media" data-instgrm-permalink="' + m.src + '" data-instgrm-version="14"></blockquote>';
         } else {
@@ -1999,29 +2023,31 @@ if(saved)return;document.documentElement.classList.toggle('dark',e.matches);if(w
     }
   }
 
-  var currentMedia = [], lbIndex = 0;
+  var currentMedia = [], lbMedia = [], lbIndex = 0;
   function renderLightbox(){
-    var m = currentMedia[lbIndex], stage = document.getElementById('lb-stage');
+    var m = lbMedia[lbIndex], stage = document.getElementById('lb-stage');
     stage.querySelectorAll('video').forEach(function(v){ v.pause(); });
     stage.innerHTML = '';
     var el;
-    if(m.type === 'image'){ el = document.createElement('img'); el.src = m.src; el.alt = m.label || ''; }
+    if(m.type === 'image'){ el = document.createElement('img'); el.src = m.full || m.src; el.alt = m.label || ''; }
     else { el = document.createElement('video'); el.src = m.src; el.controls = true; el.playsInline = true; el.autoplay = true; }
     stage.appendChild(el);
-    document.getElementById('lb-caption').textContent = (m.label || '') + (m.views ? ' · ' + m.views : '');
-    document.getElementById('lb-count').textContent = (lbIndex + 1) + ' / ' + currentMedia.length;
-    var multi = currentMedia.length > 1;
+    document.getElementById('lb-caption').textContent = (m.lbLabel || m.label || '') + (m.views ? ' · ' + m.views : '');
+    document.getElementById('lb-count').textContent = (lbIndex + 1) + ' / ' + lbMedia.length;
+    var multi = lbMedia.length > 1;
     document.getElementById('lb-next').style.display = multi ? '' : 'none';
     document.getElementById('lb-prev').style.display = multi ? '' : 'none';
   }
   function openLightbox(i){
     if(i < 0) return;
-    lbIndex = i;
+    var g = currentMedia[i].group;
+    lbMedia = currentMedia;
+    lbIndex = lbMedia.indexOf(currentMedia[i]);
     document.getElementById('lightbox').classList.add('open');
     renderLightbox();
   }
   function lightboxStep(d){
-    lbIndex = (lbIndex + d + currentMedia.length) % currentMedia.length;
+    lbIndex = (lbIndex + d + lbMedia.length) % lbMedia.length;
     renderLightbox();
   }
   function closeLightbox(){
